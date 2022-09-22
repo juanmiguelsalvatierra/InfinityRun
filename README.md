@@ -1,1 +1,1 @@
-Vote Kick Matthias 2/3
+Vote Kick Matthias 4/3
