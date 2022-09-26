@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mobile_app">
    <application
-        android:label="mobile_app"
+        android:label="InfinityRun"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -27,6 +27,10 @@
               android:name="io.flutter.embedding.android.SplashScreenDrawable"
               android:resource="@drawable/launch_background"
               />
+            <meta-data
+                android:name="com.google.android.goe.API_KEY"
+                android:value="AIzaSyB-CuvEpByQSyXmEdoz4CarkzR5SvYs3iA" 
+                />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -37,5 +41,6 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+       
     </application>
 </manifest>
