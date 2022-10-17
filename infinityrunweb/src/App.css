@@ -9,7 +9,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+    animation: bounce 1s infinite;
   }
 }
 
@@ -34,5 +34,17 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce {
+  10% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(50px);
+  }
+  100% {
+    transform: translateY(0px) rotate(360deg);
   }
 }
