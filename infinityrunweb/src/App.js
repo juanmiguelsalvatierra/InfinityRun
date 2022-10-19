@@ -28,14 +28,11 @@ function initMap(){
 
 window.initMap= initMap;*/
 
-import React, { Component } from 'react';
-import { Map, GoogleApiWrapper } from 'google-maps-react';
-
+import React, { Component } from 'react'; import { Map, GoogleApiWrapper } from 'google-maps-react';
 const mapStyles = {
   width: '100%',
   height: '100%'
 };
-
 export class MapContainer extends Component {
   render() {
     return (
@@ -53,7 +50,6 @@ export class MapContainer extends Component {
     );
   }
 }
-
 export default GoogleApiWrapper({
   apiKey: 'AIzaSyDYnFvTRbk98dxnRQPJSEhx1UU4x3f09v4'
 })(MapContainer);
