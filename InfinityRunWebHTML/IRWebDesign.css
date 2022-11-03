@@ -1,0 +1,64 @@
+#map {
+  height: 400px;
+  width: 50%;
+  margin-top: 7%;
+  margin-left: 3%;
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #353c47;
+}
+
+body {
+  /*background-image: linear-gradient(#FFFFFF, #83CCF6, #375adb);*/
+  height: 100vh;
+  background-color: #353c47
+}
+
+.logo {
+  height: 70px;
+}
+
+h1 {
+  font-family: century gothic;
+  margin-left: 3%;
+  font-weight: lighter;
+  width: 50px;
+  display: inline block;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /*background-color: #2f3238;*/
+}
+
+li a {
+  font-family: century gothic;
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+nav {
+  width: 100%;
+}
+
+.nav_links {
+  list-style: none;
+  float: right;
+}
+
+.nav_links li {
+  display: inline-block;
+  padding: 0px 20px;
+}
+
+li a:hover{
+  color: #83CCF6;
+}
+
+#ir {
+  font-size: 50px
+  float: left;
+  color: #FFFFFF
+}

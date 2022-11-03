@@ -42,8 +42,9 @@ export class MapContainer extends Component {
         style={mapStyles}
         initialCenter={
           {
-            lat: -1.2884,
-            lng: 36.8233
+            lat: 48.22176299638565,
+            lng: 16.445311903684694,
+            zoom: 20,
           }
         }
       />
@@ -51,5 +52,5 @@ export class MapContainer extends Component {
   }
 }
 export default GoogleApiWrapper({
-  apiKey: 'AIzaSyDYnFvTRbk98dxnRQPJSEhx1UU4x3f09v4'
+  apiKey: 'AIzaSyCNySrCJocWExi7V6M1RTfqJcV_qIYP-ow'
 })(MapContainer);
