@@ -17,7 +17,7 @@
         android:theme="@style/Theme.MobileApp_InfinityRun"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".LogInActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

@@ -15,13 +15,11 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationRequest;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -50,7 +48,7 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
 
     Chronometer chronometer;
     long pauseOffset;
-    boolean running;
+    boolean timeIsRunning;
 
 
     @Override
@@ -72,7 +70,7 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
         logoutbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Map_Runner.this, MainActivity.class);
+                Intent intent = new Intent(Map_Runner.this, LogInActivity.class);
                 startActivity(intent);
             }
         });
@@ -115,6 +113,7 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
         };
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
+        // start running the route latLngList
 
 
         currentPolyline = map.addPolyline(new PolylineOptions().addAll(latLngList).width(5).color(R.color.black));
@@ -123,15 +122,15 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
     }
 
     public void startTimer(View v){
-        if(!running) {
+        if(!timeIsRunning) {
             chronometer.setBase(SystemClock.elapsedRealtime());
             chronometer.start();
-            running = true;
+            timeIsRunning = true;
         }
     }
 
     public void stopTimer(View v){
-        if (running) {
+        if (timeIsRunning) {
             chronometer.stop();
             pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
         }

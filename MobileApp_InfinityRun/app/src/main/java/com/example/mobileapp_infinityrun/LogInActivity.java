@@ -4,9 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.telecom.ConnectionRequest;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +19,7 @@ import com.google.android.material.button.MaterialButton;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity {
+public class LogInActivity extends AppCompatActivity {
 
 
     String usernameDatabase, mailDatabase, passwordDatabase;
@@ -29,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         TextView username = (TextView) findViewById(R.id.username);
         TextView password = (TextView) findViewById(R.id.password);
@@ -39,16 +37,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 GetDatabase(v);
-                Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, Map.class);
+                Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LogInActivity.this, Map.class);
                 intent.putExtra("username", username.getText().toString());
                 startActivity(intent);
                 //if (username.getText().toString().equals(username) && password.getText().toString().equals("") || username.getText().toString().equals(mail) && password.getText().toString().equals("")) {
-                //    Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                //    Intent intent = new Intent(MainActivity.this, Map.class);
+                //    Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                //    Intent intent = new Intent(LogInActivity.this, Map.class);
                 //    startActivity(intent);
                 //} else
-                //    Toast.makeText(MainActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                //    Toast.makeText(LogInActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -56,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         signupbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SignUp.class);
+                Intent intent = new Intent(LogInActivity.this, SignUp.class);
                 startActivity(intent);
             }
         });
