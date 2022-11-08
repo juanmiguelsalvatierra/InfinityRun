@@ -1,11 +1,14 @@
 #map {
-  height: 400px;
+  position: absolute;
+  height: 60%;
+  /*width: 50%;*/
   width: 50%;
-  margin-top: 7%;
-  margin-left: 3%;
-  border-radius: 20px;
+  padding-right: 0%;
+  border-radius: 50px;
   border-style: solid;
   border-color: #353c47;
+  left: 30px;
+  top: 150px;
 }
 
 body {
@@ -24,6 +27,15 @@ h1 {
   font-weight: lighter;
   width: 50px;
   display: inline block;
+}
+
+#user {
+  position: absolute;
+  right: 20%;
+  top: 15%;
+  color: #FFFFFF;
+  font-family: century gothic;
+  margin-top: 0%;
 }
 
 header {
