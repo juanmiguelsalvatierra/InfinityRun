@@ -44,7 +44,7 @@ export class MapContainer extends Component {
           {
             lat: 48.22176299638565,
             lng: 16.445311903684694,
-            zoom: 20,
+            zoom: 20  
           }
         }
       />
