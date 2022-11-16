@@ -27,28 +27,44 @@
         android:layout_centerHorizontal="true"
         android:background="@drawable/rounded_corner_blue"/>
 
-    <fragment
-        android:layout_width="300dp"
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:id="@+id/map"
-        android:gravity="center"
-        android:layout_marginRight="60dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginTop="100dp"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        />
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/username"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="10dp"
+        android:id="@+id/cardView">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/rounded_corner_googlemaps">
+            <fragment
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/map"
+                android:gravity="center"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                app:shapeAppearanceOverlay="@style/round"
+                />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
 
     <com.google.android.material.button.MaterialButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/startbutton"
-        android:layout_below="@+id/map"
+        android:layout_below="@+id/cardView"
         android:text="START"
-        android:textSize="30dp"
+        android:textSize="30sp"
         android:backgroundTint="@color/design_default_color_secondary"
         android:layout_centerHorizontal="true"
         android:layout_margin="50dp"/>
-
-
 
 </RelativeLayout>

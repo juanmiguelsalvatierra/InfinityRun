@@ -17,6 +17,35 @@
         android:drawableLeft="@drawable/ic_baseline_logout_24"
         />
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/username"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="10dp"
+        android:id="@+id/cardView">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/rounded_corner_googlemaps">
+            <fragment
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/map"
+                android:gravity="center"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                app:shapeAppearanceOverlay="@style/round"
+                />
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,25 +56,15 @@
         android:layout_centerHorizontal="true"
         android:background="@drawable/rounded_corner_blue"/>
 
-    <fragment
-        android:layout_width="350dp"
-        android:layout_height="500dp"
-        android:id="@+id/map"
-        android:gravity="center"
-        android:layout_marginRight="60dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginTop="100dp"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        app:shapeAppearanceOverlay="@style/round"
-        />
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/speed"
-        android:layout_below="@id/map"
+        android:layout_below="@id/cardView"
         android:background="@drawable/rounded_corner_blue"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textColorHint="@color/black"
         android:textColor="@color/black"
         android:layout_marginTop="20dp"
@@ -60,10 +79,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/heartrate"
-        android:layout_below="@id/map"
+        android:layout_below="@id/cardView"
         android:background="@drawable/rounded_corner_blue"
         android:hint="120 bpm"
-        android:textSize="20dp"
+        android:textSize="2sp"
         android:textColorHint="@color/black"
         android:textColor="@color/black"
         android:layout_marginTop="20dp"
@@ -81,7 +100,7 @@
         android:id="@+id/timer"
         android:layout_below="@id/speed"
         android:background="@drawable/rounded_corner_blue"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textColorHint="@color/black"
         android:textColor="@color/black"
         android:layout_marginTop="25dp"

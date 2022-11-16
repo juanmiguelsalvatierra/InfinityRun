@@ -6,6 +6,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.le.BluetoothLeScanner;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -143,6 +145,15 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
         Canvas canvas = new Canvas(bitmap);
         drawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    // Connect to bluetooth device
+    public void connectBluetooth(){
+        // TODO: connect to bluetooth device
+        // TODO: get data from bluetooth device
+        // connect to bluetooth device
+        // get data from bluetooth device
+
     }
 
 }
