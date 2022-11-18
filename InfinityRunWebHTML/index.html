@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <title>Infinity Run | Coach Edition</title>
-    <link rel="stylesheet" type="text/css" href="IRWebDesign.css" />
-    <script src="index.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="main.js"></script>
   </head>
   <body>
     <header>
@@ -22,28 +22,36 @@
     </header>
     <div id="userdata">
       <table id="usertable">
-          <th id="username"><h2>Nedza</h2></th>
         <tr>
-          <th><h3>TIME</h3></th>
-          <th><h3>HEARTRATE</h3></th>
+          <th style="width: 40%"></th>
+          <th><h2>Nedza</h2></th>
+          <th style="width: 40%"></th>
         </tr>
         <tr>
-          <th><h3>5:34</h3></th>
-          <th><h3>124 BPM</h3></th>
+          <th class="data"><h3>TIME</h3></th>
+          <th></th>
+          <th class="data"><h3>HEARTRATE</h3></th>
         </tr>
         <tr>
-          <th><h3>DISTANCE</h3></th>
-          <th><h3>AVG. SPEED</h3></th>
+          <th class="data"><h3>5:34</h3></th>
+          <th></th>
+          <th class="data"><h3>124 BPM</h3></th>
         </tr>
         <tr>
-          <th><h3>1.2 KM</h3></th>
-          <th><h3>11.2 KM/H</h3></th>
+          <th class="data"><h3>DISTANCE</h3></th>
+          <th></th>
+          <th class="data"><h3>AVG. SPEED</h3></th>
         </tr>
+        <tr>
+          <th class="data"><h3>1.2 KM</h3></th>
+          <th></th>
+          <th class="data"><h3>11.2 KM/H</h3></th>
+        </tr> 
       </table>
     </div>
       <div id="map"></div>
         <script
-          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly"
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCNySrCJocWExi7V6M1RTfqJcV_qIYP-ow&callback=initMap&v=weekly"
           defer
         ></script>
       </div>
