@@ -12,8 +12,11 @@ namespace InfinityRunWEBAPI.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
-        [BsonElement("Name")]
-        public string? Name { get; set; }
+        [BsonElement("Userame")]
+        public string? username { get; set; }
+
+        [BsonElement("Mail")]
+        public string? mail { get; set; }
 
         [BsonElement("Password")]
         public string? password { get; set; }

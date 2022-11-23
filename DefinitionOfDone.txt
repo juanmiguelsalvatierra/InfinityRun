@@ -1,0 +1,20 @@
+SYP Diplomarbeit
+
+Definition of Done
+
+Entwicklung:
+-Programm startet Fehlerfrei
+-Unit Test durchgeführt
+-Performance Test durchgeführt
+-Programm kommentiert
+-Dummy Variablen / Placeholder entfernt
+-Persönliche & Private Information gelöscht
+-Code Reviews durchgeführt
+-Security Reviews durchgeführt
+-Barrierefreiheit überprüft
+
+
+Dokumentation:
+-Dokumentation der durchgeführten Aufgabe
+-Review der Dokumentation durchgeführt
+-Commit & Push mit Kommentaren auf Github durchgeführt	

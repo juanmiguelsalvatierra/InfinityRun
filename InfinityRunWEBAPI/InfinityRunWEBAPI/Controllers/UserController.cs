@@ -1,6 +1,8 @@
 ﻿using InfinityRunWEBAPI.Models;
 using InfinityRunWEBAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace InfinityRunWEBAPI.Controllers;
 
@@ -33,6 +35,27 @@ public class UserController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(User newUser)
     {
+        string data = newUser.password ?? string.Empty;
+        string result = string.Empty;
+
+        using (var myHash = SHA256.Create())
+        {
+
+            var byteArrayResultOfRawData =
+                  Encoding.UTF8.GetBytes(data);
+
+
+            var byteArrayResult =
+                 myHash.ComputeHash(byteArrayResultOfRawData);
+
+
+            result =
+              string.Concat(Array.ConvertAll(byteArrayResult,
+                                   h => h.ToString("X2")));
+        }
+
+        newUser.password = result;
+
         await _usersService.CreateAsync(newUser);
 
         return CreatedAtAction(nameof(Get), new { id = newUser.Id }, newUser);

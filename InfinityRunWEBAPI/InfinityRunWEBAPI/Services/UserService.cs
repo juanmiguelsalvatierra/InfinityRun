@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using InfinityRunWEBAPI.Models;
-using System.Text;
 
 namespace InfinityRunWEBAPI.Services
 {
@@ -28,14 +27,9 @@ namespace InfinityRunWEBAPI.Services
         public async Task<User?> GetAsync(string id) =>
             await _usersCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-        public async Task CreateAsync(User newUser)
-        {
-            PasswordHash hash = new PasswordHash(newUser.password);
-            newUser.password = Encoding.UTF8.GetString(hash.Hash);
-
+        public async Task CreateAsync(User newUser) =>
             await _usersCollection.InsertOneAsync(newUser);
-        }
-            
+        
         public async Task UpdateAsync(string id, User updatedUser) =>
             await _usersCollection.ReplaceOneAsync(x => x.Id == id, updatedUser);
 
