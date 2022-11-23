@@ -15,10 +15,12 @@ public class UserController : ControllerBase
     public UserController(UserService usersService) =>
         _usersService = usersService;
 
+    
     [HttpGet]
     public async Task<List<User>> Get() =>
         await _usersService.GetAsync();
 
+    
     [HttpGet("{id:length(24)}")]
     public async Task<ActionResult<User>> Get(string id)
     {
@@ -32,6 +34,7 @@ public class UserController : ControllerBase
         return user;
     }
 
+    
     [HttpPost]
     public async Task<IActionResult> Post(User newUser)
     {
@@ -61,6 +64,7 @@ public class UserController : ControllerBase
         return CreatedAtAction(nameof(Get), new { id = newUser.Id }, newUser);
     }
 
+    
     [HttpPut("{id:length(24)}")]
     public async Task<IActionResult> Update(string id, User updatedUser)
     {
@@ -78,6 +82,7 @@ public class UserController : ControllerBase
         return NoContent();
     }
 
+    
     [HttpDelete("{id:length(24)}")]
     public async Task<IActionResult> Delete(string id)
     {

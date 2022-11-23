@@ -1,4 +1,3 @@
-using MongoDB.Driver;
 using InfinityRunWEBAPI.Models;
 using InfinityRunWEBAPI.Services;
 
@@ -6,13 +5,12 @@ using InfinityRunWEBAPI.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-// Add services to the container.
 builder.Services.Configure<InfinityRunDatabaseSettings>(
     builder.Configuration.GetSection("InfinityRunDatabase"));
 
 
 builder.Services.AddSingleton<UserService>();
+builder.Services.AddSingleton<RouteService>();
 
 builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
