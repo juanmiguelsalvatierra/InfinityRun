@@ -92,6 +92,7 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
         latLngList.add(placeList.get(0).getPosition());
 
         TextView speed = findViewById(R.id.speed);
+        TextView distance = findViewById(R.id.heartrate);
 
         // Get current location
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
