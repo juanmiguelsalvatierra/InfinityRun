@@ -49,26 +49,31 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
         setContentView(R.layout.activity_map);
 
         TextView username = findViewById(R.id.username);
+        // Get username from previous activity and set it to the textview
         username.setText(getIntent().getStringExtra("username"));
 
+        // Get the map fragment
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // Button to to start the game and go to the next activity
         MaterialButton startbtn = (MaterialButton) findViewById(R.id.startbutton);
         startbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Check if placeList is empty
                 if (!placeList.isEmpty()) {
                     Toast.makeText(Map.this, "Run successfully started", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Map.this, Map_Runner.class);
                     intent.putExtra("username", username.getText().toString());
                     intent.putExtra("placeList", (Serializable) placeList);
                     startActivity(intent);
-                } else
+                } else // If placeList is empty, show a toast message
                     Toast.makeText(Map.this, "No route available", Toast.LENGTH_SHORT).show();
             }
         });
 
+        // Button to logout and go to the login activity
         MaterialButton logoutbtn = (MaterialButton) findViewById(R.id.logoutbutton);
         logoutbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,8 +86,10 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        // Get the map and set the map type
         map = googleMap;
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        // Check if the GPS is enabled
         turnOnLocation();
 
         // Connect places
@@ -95,21 +102,26 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
         placeList.add(new MarkerOptions().position(new LatLng(48.22048, 16.44386)).title("Place 4")
                 .icon(bitmapDescriptor(getApplicationContext(), R.drawable.ic_baseline_circle_24)));
 
+        // Check if the placeList is empty
         if(placeList.isEmpty()) return;
 
+        // Add markers to the map
         for (MarkerOptions m:placeList) {
             latLngList.add(m.getPosition());
         }
+        // Add the first marker to the map to make a loop
         latLngList.add(placeList.get(0).getPosition());
 
+        // Add the markers to the map
         for (MarkerOptions m:placeList) {
             markerList.add(map.addMarker(m));
         }
 
+        // Set the polyline
         currentPolyline = map.addPolyline(new PolylineOptions().addAll(latLngList).width(5).color(R.color.black));
 
+        // Move the camera to the first marker
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(placeList.get(0).getPosition(), 15));
-
     }
 
     private BitmapDescriptor bitmapDescriptor(Context context, int vectorResId){

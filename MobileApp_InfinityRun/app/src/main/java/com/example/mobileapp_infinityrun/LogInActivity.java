@@ -39,6 +39,7 @@ public class LogInActivity extends AppCompatActivity {
                 GetDatabase(v);
                 Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LogInActivity.this, Map.class);
+                // send username to Map
                 intent.putExtra("username", username.getText().toString());
                 startActivity(intent);
                 //if (username.getText().toString().equals(username) && password.getText().toString().equals("") || username.getText().toString().equals(mail) && password.getText().toString().equals("")) {
@@ -54,6 +55,7 @@ public class LogInActivity extends AppCompatActivity {
         signupbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Go to the sign up page
                 Intent intent = new Intent(LogInActivity.this, SignUp.class);
                 startActivity(intent);
             }

@@ -59,15 +59,18 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
         setContentView(R.layout.activity_map_runner);
         chronometer = findViewById(R.id.timer);
 
+        // Get the username from the previous activity
         TextView username = findViewById(R.id.username);
         username.setText(getIntent().getStringExtra("username"));
 
+        // Get the place list from the previous activity
         Bundle bundle = getIntent().getExtras();
         placeList = (List<MarkerOptions>) bundle.getSerializable("placeList");
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // Button to Logout
         MaterialButton logoutbtn = (MaterialButton) findViewById(R.id.logoutbutton);
         logoutbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,20 +84,23 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        // Set the map and the type of map
         map = googleMap;
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
+        // Check if place list is empty
         if (placeList.isEmpty()) return;
 
+        // Add the markers to the map
         for (MarkerOptions m : placeList) {
             latLngList.add(m.getPosition());
         }
+        // Add the first marker to the map to make a loop
         latLngList.add(placeList.get(0).getPosition());
 
         TextView speed = findViewById(R.id.speed);
         TextView distance = findViewById(R.id.heartrate);
 
-        // Get current location
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             map.setMyLocationEnabled(true);
             map.getUiSettings().setMyLocationButtonEnabled(true);  // Enable button to zoom to current location
@@ -106,18 +112,18 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
+                // Update current location and get the speed
                 currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 if (markerAtCurrrentLocation != null) markerAtCurrrentLocation.remove();
                 //markerAtCurrrentLocation = map.addMarker(new MarkerOptions().position(currentLocation).title("Current Location"));
+                // Zoom to current location
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
                 //Get speed
                 speed.setText(String.valueOf(location.getSpeed()) + " km/h");
             }
         };
+
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-
-        // start running the route latLngList
-
 
         currentPolyline = map.addPolyline(new PolylineOptions().addAll(latLngList).width(5).color(R.color.black));
 
