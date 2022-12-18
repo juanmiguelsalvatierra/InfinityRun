@@ -1,4 +1,4 @@
-let map;
+/*let map;
 
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
@@ -18,4 +18,17 @@ function initMap() {
   })
 }
 
-window.initMap = initMap;
+window.initMap = initMap;*/
+
+var axios = require('axios');
+
+axios.get('https://infinityrun.azurewebsites.net/api/User')
+  .then(function(response){
+      console.log(response)
+  })
+
+axios.post('https://infinityrun.azurewebsites.net/api/user', {
+  username: 'matze',
+  mail: 'matze@lol.com',
+  password: 'hs'
+})
