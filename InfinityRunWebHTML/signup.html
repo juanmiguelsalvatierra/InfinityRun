@@ -5,23 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <title>Infinity Run | Login</title>
-    <link rel="stylesheet" type="text/css" href="stylelogin.css" />
+    <link rel="stylesheet" type="text/css" href="stylesignup.css" />
     <script src="main.js"></script>
   </head>
   <body>
     <img class="logo" src="images/logoblack.png" alt="logo">
     <div class="center">
-      <h1>Login</h1>
+      <h1>Sign Up</h1>
       <form method="post"></form>
         <div class="txt_field">
-          <input type="text" placeholder="Username" required>
+          <input type="text" placeholder="E-Mail" required>
         </div>
+        <div class="txt_field">
+            <input type="text" placeholder="Username" required>
+          </div>
         <div class="txt_field">
           <input type="password" placeholder="Password" required>
         </div>
-        <p class="signup">Don't have an account? <a href="signup.html">Sign Up</a></p>
+        <div class="txt_field">
+            <input type="password" placeholder="Confirm Password" required>
+        </div>
+        <p class="login">Already have an account? <a href="login.html">Login</a></p>
         <a href="index.html">
-          <button type="submit">LOGIN</button>
+            <button type="submit">SIGN UP</button>
         </a>
     </div>
   </body>
