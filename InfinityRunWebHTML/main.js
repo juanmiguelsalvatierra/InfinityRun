@@ -25,9 +25,12 @@ var axios = require('axios');
 axios.get('https://infinityrun.azurewebsites.net/api/UserData/')
   .then(function(response){
     let test = response.data;
+    for (let i = 0; i< test.length; i++) {
+      console.log(test[i].heartRate);
+    }
     let temp = test.username;
       //console.log(response.data)
-    console.log(response);
+    //console.log(response);
   })
 
 axios.post('https://infinityrun.azurewebsites.net/api/user', {

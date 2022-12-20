@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <title>Infinity Run | Login</title>
+    <title>Infinity Run | Sign Up</title>
     <link rel="stylesheet" type="text/css" href="stylesignup.css" />
     <script src="main.js"></script>
   </head>
@@ -12,23 +12,21 @@
     <img class="logo" src="images/logoblack.png" alt="logo">
     <div class="center">
       <h1>Sign Up</h1>
-      <form method="post"></form>
+      <form method="post">
         <div class="txt_field">
-          <input type="text" placeholder="E-Mail" required>
+          <input type="text" name="mail" id="mail" placeholder="E-Mail" required>
         </div>
         <div class="txt_field">
-            <input type="text" placeholder="Username" required>
+            <input type="text" name="username" id="username" placeholder="Username" required>
           </div>
         <div class="txt_field">
-          <input type="password" placeholder="Password" required>
-        </div>
-        <div class="txt_field">
-            <input type="password" placeholder="Confirm Password" required>
+          <input type="password" name="password" id="password" placeholder="Password" required>
         </div>
         <p class="login">Already have an account? <a href="login.html">Login</a></p>
         <a href="index.html">
             <button type="submit">SIGN UP</button>
         </a>
+      </form>
     </div>
   </body>
 </html>
