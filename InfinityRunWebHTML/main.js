@@ -1,4 +1,4 @@
-let map;
+/*let map;
 
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
@@ -38,3 +38,4 @@ axios.post('https://infinityrun.azurewebsites.net/api/user', {
   mail: 'matze@lol.com',
   password: 'hs'
 })
+*/
