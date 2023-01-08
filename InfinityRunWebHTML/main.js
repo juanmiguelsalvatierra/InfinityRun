@@ -1,4 +1,8 @@
-/*let map;
+let map;
+
+let markersArray = [];
+
+let polyline = null;
 
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
@@ -7,20 +11,44 @@ function initMap() {
     disableDefaultUI: true,
   });
 
-  map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
+  map.addListener('click', function(e) {
+    console.log(e);
+    addMarker(e.latLng);
+    drawPolyline();
+  });
 
-  const uluru = { lat: 48.22176299638565, lng: 16.445311903684694 };
+  //map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
 
+  function addMarker(latLng) {
+    let marker = new google.maps.Marker({
+        map: map,
+        position: latLng,
+        draggable: true
+    });
 
-  const marker = new google.maps.Marker({
-    position: uluru,
-    map: map
-  })
+    // Wenn der User klickt wird die Position in das Array getan
+    markersArray.push(marker);
+  }
+
+  function drawPolyline() {
+    let markersPositionArray = [];
+    // Koordinaten von dem Array in das neue Array hinzufügen
+    markersArray.forEach(function(e) {
+      markersPositionArray.push(e.getPosition());
+    });
+
+    // Polyline wird gezeichnet
+    polyline = new google.maps.Polyline({
+      map: map,
+      path: markersPositionArray,
+      strokeOpacity: 1
+    });
+  }
 }
 
 window.initMap = initMap;
 
-var axios = require('axios');
+/*var axios = require('axios');
 
 axios.get('https://infinityrun.azurewebsites.net/api/UserData/')
   .then(function(response){
