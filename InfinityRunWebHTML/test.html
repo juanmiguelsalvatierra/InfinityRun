@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <title>Infinity Run | Login</title>
+    <link rel="stylesheet" type="text/css" href="stylelogin.css" />
+    <script src="test.js"></script>
+  </head>
+  <body>
+    <div id="example"></div>
+    <script>
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'http://infinityrun.azurewebsites.net/api/UserData/', true);
+        xhr.send();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var data = JSON.parse(xhr.responseText);
+                document.getElementById('example').innerHTML = data.example;
+            }
+        }
+        xhr.onerror = function() {
+            console.log("Error", xhr.statusText);
+        }
+    </script>
+  </body>
+</html>

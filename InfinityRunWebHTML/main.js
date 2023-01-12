@@ -46,24 +46,25 @@ function initMap() {
   }
 }
 
-window.initMap = initMap;
+//window.initMap = initMap;
 
-/*var axios = require('axios');
+fetch('https://infinityrun.azurewebsites.net/api/UserData/')
+  .then(response => response.json())
+  .then(data => {
+    // Access the data and update the HTML elements
+    document.getElementById('example').innerHTML = data.example;
+  });
+
+var axios = require('axios');
 
 axios.get('https://infinityrun.azurewebsites.net/api/UserData/')
   .then(function(response){
-    let test = response.data;
-    for (let i = 0; i< test.length; i++) {
-      console.log(test[i].heartRate);
-    }
-    let temp = test.username;
-      //console.log(response.data)
-    //console.log(response);
+    console.log(response.data[0].heartRate);
   })
 
-axios.post('https://infinityrun.azurewebsites.net/api/user', {
+/*axios.post('https://infinityrun.azurewebsites.net/api/user', {
   username: 'matze',
   mail: 'matze@lol.com',
-  password: 'hs'
-})
-*/
+  password: 'testpw'
+})*/
+
