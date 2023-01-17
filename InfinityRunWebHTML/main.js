@@ -57,10 +57,13 @@ setInterval(() => {
           var data = JSON.parse(xhr.responseText);
           document.getElementById('hr').innerHTML = data.heartRate;
           document.getElementById('speed').innerHTML = data.speed;
-          document.getElementById('example').innerHTML = data.location;
-          var o = {"lat": data.location[0], "lng":data.location[1]};
-          addMarker(o);
-
+          var o = new google.maps.LatLng(data.location[0], data.location[1]);
+          let marker = new google.maps.Marker({
+            map: map,
+            position: o,
+            draggable: true,
+            icon: 'images/test.jpg'
+        });
       }
   }
   xhr.onerror = function() {
