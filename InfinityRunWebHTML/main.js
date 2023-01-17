@@ -17,6 +17,7 @@ function initMap() {
     drawPolyline();
   });
 
+
   //map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
 
   function addMarker(latLng) {
@@ -46,9 +47,30 @@ function initMap() {
   }
 }
 
+var xhr = new XMLHttpRequest();
+
+setInterval(() => {
+  xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/UserData/639158b08b3660204207cacb', true);
+  xhr.send();
+  xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+          var data = JSON.parse(xhr.responseText);
+          document.getElementById('hr').innerHTML = data.heartRate;
+          document.getElementById('speed').innerHTML = data.speed;
+          document.getElementById('example').innerHTML = data.location;
+          var o = {"lat": data.location[0], "lng":data.location[1]};
+          addMarker(o);
+
+      }
+  }
+  xhr.onerror = function() {
+      console.log("Error", xhr.statusText);
+  }
+}, 2000);
+
 //window.initMap = initMap;
 
-fetch('https://infinityrun.azurewebsites.net/api/UserData/')
+/*fetch('https://infinityrun.azurewebsites.net/api/UserData/')
   .then(response => response.json())
   .then(data => {
     // Access the data and update the HTML elements
@@ -60,11 +82,14 @@ var axios = require('axios');
 axios.get('https://infinityrun.azurewebsites.net/api/UserData/')
   .then(function(response){
     console.log(response.data[0].heartRate);
-  })
+  })*/
+
+
 
 /*axios.post('https://infinityrun.azurewebsites.net/api/user', {
   username: 'matze',
   mail: 'matze@lol.com',
   password: 'testpw'
 })*/
+
 

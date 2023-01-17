@@ -10,19 +10,21 @@
   </head>
   <body>
     <div id="example"></div>
-    <script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!--<script>
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'http://infinityrun.azurewebsites.net/api/UserData/', true);
+        xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/UserData/', true);
         xhr.send();
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 var data = JSON.parse(xhr.responseText);
-                document.getElementById('example').innerHTML = data.example;
+                document.getElementById('example').innerHTML = data[0].heartRate;
             }
         }
         xhr.onerror = function() {
             console.log("Error", xhr.statusText);
         }
-    </script>
+    </script>-->
   </body>
 </html>
