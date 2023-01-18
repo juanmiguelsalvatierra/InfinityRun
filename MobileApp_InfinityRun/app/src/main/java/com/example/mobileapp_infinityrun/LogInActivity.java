@@ -19,35 +19,42 @@ import com.google.android.material.button.MaterialButton;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+
 public class LogInActivity extends AppCompatActivity {
 
 
     String usernameDatabase, mailDatabase, passwordDatabase;
+    TextView username;
+    TextView password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        TextView username = (TextView) findViewById(R.id.username);
-        TextView password = (TextView) findViewById(R.id.password);
+        username = (TextView) findViewById(R.id.username);
+        password = (TextView) findViewById(R.id.password);
 
         MaterialButton loginbtn = (MaterialButton) findViewById(R.id.loginButton);
         loginbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GetDatabase(v);
                 Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LogInActivity.this, Map.class);
                 // send username to Map
                 intent.putExtra("username", username.getText().toString());
                 startActivity(intent);
-                //if (username.getText().toString().equals(username) && password.getText().toString().equals("") || username.getText().toString().equals(mail) && password.getText().toString().equals("")) {
-                //    Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                //    Intent intent = new Intent(LogInActivity.this, Map.class);
-                //    startActivity(intent);
-                //} else
-                //    Toast.makeText(LogInActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                //GetDatabase(v);
             }
         });
 
@@ -63,16 +70,69 @@ public class LogInActivity extends AppCompatActivity {
 
     }
 
+    /*
     public void GetDatabase(View view) {
+        HttpURLConnection connection = null;
+
+        try{
+            URL url = new URL("https://infinityrun.azurewebsites.net/api/User/matze&hs");
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            connection.setUseCaches(false);
+            connection.setDoOutput(true);
+
+            //Send request
+            DataOutputStream wr = new DataOutputStream (
+                    connection.getOutputStream());
+            wr.close();
+
+            //Get Response
+            InputStream is = connection.getInputStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+            StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
+            String line;
+            while ((line = rd.readLine()) != null) {
+                response.append(line);
+                response.append('\r');
+            }
+            rd.close();
+            System.out.println(response);
+
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /************************************************
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://";
+        String url = "https://infinityrun.azurewebsites.net/api/User/"+username.getText().toString()+"&"+password.getText().toString();
         // Request a string response from the provided URL.
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            JSONArray jsonArray = response.getJSONArray("data");
+                            JSONObject user = response.getJSONObject("data");
+
+                            System.out.println("-----------------------------------------------------------------------");
+                            if(user == null){
+                                Toast.makeText(LogInActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                System.out.println("TEST111111111111111111111111111111111111111111111111111111111111");
+                                Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(LogInActivity.this, Map.class);
+                                // send username to Map
+                                intent.putExtra("username", username.getText().toString());
+                                startActivity(intent);
+                            }
+                            //JSONArray jsonArray = response.getJSONArray("data");
+
+                            /*
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject data = jsonArray.getJSONObject(i);
                                 usernameDatabase = data.getString("username");
@@ -91,5 +151,7 @@ public class LogInActivity extends AppCompatActivity {
         });
         // Add the request to the RequestQueue.
         queue.add(jsonObjectRequest);
+
     }
+    */
 }
