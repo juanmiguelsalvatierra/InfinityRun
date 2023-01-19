@@ -1,0 +1,67 @@
+body {
+    /*background-image: linear-gradient(#FFFFFF, #83CCF6, #375adb);*/
+    height: 100vh;
+    background-color: #353c47;
+    font-family: Tahoma;
+}
+
+.logo {
+    position: absolute;
+    left: 35%;
+    right: 35%;
+    top: 3%;
+    height: 100px;
+}
+
+.center{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #454e5c;
+    height: 450px;
+    width: 400px;
+    border-radius: 20px;
+}
+
+h1 {
+    text-align: center;
+    color:white;
+}
+
+.txt_field {
+    color:white;
+}
+
+.txt_field input {
+    width: 90%;
+    height: 20px;
+    margin-left: 3%;
+    margin-top: 30px;
+    border-radius: 10px;
+}
+
+button{
+    margin-left: 2%;
+    margin-top: 30px;
+    width: 95%;
+    height: 40px;
+    background-color:aquamarine;
+    border-radius: 10px;
+    border-color:aquamarine;
+}
+
+button:hover{
+    opacity: 0.8;
+}
+
+.login{
+    text-align: center;
+    color: white;
+}
+
+a{
+    text-decoration: none;
+    color: aquamarine;
+    font-family: tahoma;
+}
