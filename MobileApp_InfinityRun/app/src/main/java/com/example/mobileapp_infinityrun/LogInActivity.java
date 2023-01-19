@@ -28,11 +28,15 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 
 public class LogInActivity extends AppCompatActivity {
 
 
     String usernameDatabase, mailDatabase, passwordDatabase;
+    private RequestQueue queue;
     TextView username;
     TextView password;
 
@@ -44,16 +48,20 @@ public class LogInActivity extends AppCompatActivity {
         username = (TextView) findViewById(R.id.username);
         password = (TextView) findViewById(R.id.password);
 
+        queue = Volley.newRequestQueue(this);
+
         MaterialButton loginbtn = (MaterialButton) findViewById(R.id.loginButton);
         loginbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                checkCredentials();
+
                 //Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(LogInActivity.this, Map.class);
+                //Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                //Intent intent = new Intent(LogInActivity.this, Map.class);
                 // send username to Map
-                intent.putExtra("username", username.getText().toString());
-                startActivity(intent);
+                //intent.putExtra("username", username.getText().toString());
+                //startActivity(intent);
                 //GetDatabase(v);
             }
         });
@@ -70,12 +78,49 @@ public class LogInActivity extends AppCompatActivity {
 
     }
 
-    /*
+
+    private void checkCredentials() {
+        String url = "https://infinityrun.azurewebsites.net/api/User/" + username.getText().toString() + "&" + password.getText().toString();
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            if(response == null) {
+                                Toast.makeText(LogInActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(LogInActivity.this, Map.class);
+                                // send username to Map
+                                intent.putExtra("username", username.getText().toString());
+                                startActivity(intent);
+                            }
+
+
+                        } catch (Exception e) {
+                            Toast.makeText(LogInActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(LogInActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        queue.add(jsonObjectRequest);
+    }
+
+
     public void GetDatabase(View view) {
         HttpURLConnection connection = null;
 
+
+
         try{
-            URL url = new URL("https://infinityrun.azurewebsites.net/api/User/matze&hs");
+            URL url = new URL("https://infinityrun.azurewebsites.net/api/User/" + username.getText().toString() + "&" + password.getText().toString());
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 
@@ -106,6 +151,7 @@ public class LogInActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        /*
         /************************************************
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "https://infinityrun.azurewebsites.net/api/User/"+username.getText().toString()+"&"+password.getText().toString();
@@ -152,6 +198,7 @@ public class LogInActivity extends AppCompatActivity {
         // Add the request to the RequestQueue.
         queue.add(jsonObjectRequest);
 
+         */
     }
-    */
+
 }

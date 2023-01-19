@@ -66,7 +66,7 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
 
     private BluetoothLeScanner bluetoothLeScanner;
     private boolean scanning;
-    private static final String TAG = "MainActivityA";
+    private static final String TAG = "MAP_RUNNER";
 
     private static final UUID hr_service = UUID.fromString("0000180d-0000-1000-8000-00805f9b34fb"); // HR
     private static final UUID hr_characteristic = UUID.fromString("00002a37-0000-1000-8000-00805f9b34fb"); // HR
