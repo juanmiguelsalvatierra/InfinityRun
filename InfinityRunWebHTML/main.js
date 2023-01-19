@@ -2,6 +2,8 @@ let map;
 
 let markersArray = [];
 
+var route = [];
+
 let polyline = null;
 
 function initMap() {
@@ -12,7 +14,7 @@ function initMap() {
   });
 
   map.addListener('click', function(e) {
-    console.log(e);
+    //console.log(e);
     addMarker(e.latLng);
     drawPolyline();
   });
@@ -27,8 +29,15 @@ function initMap() {
         draggable: true
     });
 
+
+    var lat = latLng.lat();
+    var lng = latLng.lng();
     // Wenn der User klickt wird die Position in das Array getan
     markersArray.push(marker);
+    
+    //Koordinaten werden in ein Array getan, Das Array wird dann zur DB geschickt
+    route.push([lat, lng]);
+    sendRoute();
   }
 
   function drawPolyline() {
@@ -47,8 +56,26 @@ function initMap() {
   }
 }
 
+
 var xhr = new XMLHttpRequest();
 
+//Route wird geschickt
+function sendRoute(){
+  var test = {
+    "userId" : "639158b08b3660204207cacb",
+    "name" : "Lauf, Matthias, lauf",
+    "routePoints" : route
+  }
+
+  var jsonString = JSON.stringify(test);
+  console.log(jsonString);
+  xhr.open('POST', 'https://infinityrun.azurewebsites.net/api/Route/', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(jsonString);
+}
+
+
+//Daten werden alle 2 Sekunden aktualisiert
 setInterval(() => {
   xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/UserData/639158b08b3660204207cacb', true);
   xhr.send();
@@ -71,28 +98,6 @@ setInterval(() => {
   }
 }, 2000);
 
+
+
 //window.initMap = initMap;
-
-/*fetch('https://infinityrun.azurewebsites.net/api/UserData/')
-  .then(response => response.json())
-  .then(data => {
-    // Access the data and update the HTML elements
-    document.getElementById('example').innerHTML = data.example;
-  });
-
-var axios = require('axios');
-
-axios.get('https://infinityrun.azurewebsites.net/api/UserData/')
-  .then(function(response){
-    console.log(response.data[0].heartRate);
-  })*/
-
-
-
-/*axios.post('https://infinityrun.azurewebsites.net/api/user', {
-  username: 'matze',
-  mail: 'matze@lol.com',
-  password: 'testpw'
-})*/
-
-
