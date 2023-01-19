@@ -74,6 +74,18 @@ function sendRoute(){
   xhr.send(jsonString);
 }
 
+xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/User/639158b08b3660204207cacb', true);
+xhr.send();
+xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+        var data = JSON.parse(xhr.responseText);
+        document.getElementById('username').innerHTML = data.username;
+    }
+}
+xhr.onerror = function() {
+    console.log("Error", xhr.statusText);
+}
+
 
 //Daten werden alle 2 Sekunden aktualisiert
 setInterval(() => {
@@ -97,7 +109,6 @@ setInterval(() => {
       console.log("Error", xhr.statusText);
   }
 }, 2000);
-
 
 
 //window.initMap = initMap;
