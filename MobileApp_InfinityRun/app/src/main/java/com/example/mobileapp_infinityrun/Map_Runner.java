@@ -113,6 +113,7 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
             }
         });
 
+        /*
         Log.d(TAG, "onCreate: ");
         if (!hasPermission(Map_Runner.this, permissions)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -120,7 +121,7 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
             }
         }
         scanLeDevice();
-
+        */
     }
 
     @Override
@@ -160,7 +161,7 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
                 // Zoom to current location
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
                 //Get speed
-                speed.setText(String.valueOf(location.getSpeed() * 3.6f) + " km/h");
+                speed.setText(String.valueOf((location.getSpeed() * 3.6f) / 1000) + " km/h");
             }
         };
 
