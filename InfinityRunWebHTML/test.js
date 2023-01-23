@@ -1,4 +1,4 @@
-var xhr = new XMLHttpRequest();
+/*var xhr = new XMLHttpRequest();
 xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/UserData/', true);
 xhr.send();
 xhr.onreadystatechange = function() {
@@ -9,7 +9,7 @@ xhr.onreadystatechange = function() {
 }
 xhr.onerror = function() {
     console.log("Error", xhr.statusText);
-}
+}*/
 /*
 import axios from 'axios';
 
@@ -22,3 +22,5 @@ axios.get('https://infinityrun.azurewebsites.net/api/UserData/')
   .catch(error => {
     console.log(error);
   });*/
+
+  var axios = require ('axios');
