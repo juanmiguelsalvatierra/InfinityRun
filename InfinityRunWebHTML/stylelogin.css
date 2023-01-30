@@ -41,6 +41,21 @@ h1 {
     border-radius: 10px;
 }
 
+#btn{
+    margin-left: 2%;
+    margin-top: 20px;
+    width: 95%;
+    height: 40px;
+    background-color:aquamarine;
+    border-radius: 10px;
+    border-color:aquamarine;
+}
+
+#error-message{
+    text-align: center;
+    color: red;
+}
+
 button{
     margin-left: 2%;
     margin-top: 20px;

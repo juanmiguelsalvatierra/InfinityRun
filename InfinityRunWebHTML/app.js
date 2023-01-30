@@ -26,15 +26,12 @@ function login() {
       if (xhr.status === 200) {
         console.log("Data received");
         var data = JSON.parse(xhr.responseText);
-        if(data != null){
-          window.location.href = "index.html";
-        }else {
-          var msg = "error";
-          document.getElementById('errormsg').innerHTML = "error";
-        }
+        window.location.href = "index.html";
+        coachname = data.username;  
         document.getElementById("data").innerHTML = JSON.stringify(data);
       } else {
         console.error("Error retrieving data");
+        document.getElementById("error-message").style.display = "block";
       }
     }
   };

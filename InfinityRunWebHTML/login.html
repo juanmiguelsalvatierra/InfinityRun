@@ -6,7 +6,7 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <title>Infinity Run | Login</title>
     <link rel="stylesheet" type="text/css" href="stylelogin.css" />
-    <script src="main.js"></script>
+    <script src="app.js"></script>
   </head>
   <body>
     <img class="logo" src="images/logoblack.png" alt="logo">
@@ -20,10 +20,14 @@
           <input type="password" name="password" id="password" placeholder="Password" required>
         </div>
         <p class="signup">Don't have an account? <a href="signup.html">Sign Up</a></p>
-        <a href="index.html">
-          <button type="submit">LOGIN</button>
-        </a>
+        <!--<a href="index.html">
+          <button type="submit" onclick="login()">LOGIN</button>
+        </a>-->
+        <input type="button" value="Login" id="btn" onclick="login()">
       </form>
+      <div id="error-message" style="display:none;">
+        Login failed. Please try again.
+      </div>
     </div>
   </body>
 </html>
