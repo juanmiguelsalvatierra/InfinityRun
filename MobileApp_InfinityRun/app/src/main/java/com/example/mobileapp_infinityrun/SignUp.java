@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,9 +15,14 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.button.MaterialButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -24,30 +30,30 @@ public class SignUp extends AppCompatActivity {
 
     String usernameDatabase, mailDatabase, passwordDatabase;
     EditText username, email, password1, password2;
+    private RequestQueue queue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        queue = Volley.newRequestQueue(this);
+
         username = (EditText) findViewById(R.id.username);
         email = (EditText) findViewById(R.id.email);
         password1 = (EditText) findViewById(R.id.password1);
         password2 = (EditText) findViewById(R.id.password2);
 
-        usernameDatabase = username.getText().toString();
-        mailDatabase = email.getText().toString();
-        passwordDatabase = password1.getText().toString();
-
         MaterialButton signupbtn = (MaterialButton) findViewById(R.id.signupButton);
         signupbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (username.getText().toString().equals(" ") && password1.getText().toString().equals(" ")) {
-                    Toast.makeText(SignUp.this, "Register Successful", Toast.LENGTH_SHORT).show();
+                if (username != null && email.getText().toString().contains("@") && password1.getText().toString().equals(password2.getText().toString())) {
+                    usernameDatabase = username.getText().toString();
+                    mailDatabase = email.getText().toString();
+                    passwordDatabase = password1.getText().toString();
                     sendData();
-                    Intent intent = new Intent(SignUp.this, Map.class);
-                    startActivity(intent);
+
                 }
                 // Check if ther is a user with the same username
                 else if (username.getText().toString().equals("admin")) {
@@ -58,9 +64,9 @@ public class SignUp extends AppCompatActivity {
                     Toast.makeText(SignUp.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
                 }
                 // Check if the password is at least 8 characters long
-                else if (password1.getText().toString().length() < 8) {
-                    Toast.makeText(SignUp.this, "Password must be at least 8 characters long", Toast.LENGTH_SHORT).show();
-                }
+                //else if (password1.getText().toString().length() < 8) {
+                //    Toast.makeText(SignUp.this, "Password must be at least 8 characters long", Toast.LENGTH_SHORT).show();
+                //}
                 // Check if the email is valid
                 else if (!email.getText().toString().contains("@")) {
                     Toast.makeText(SignUp.this, "Invalid email", Toast.LENGTH_SHORT).show();
@@ -95,31 +101,35 @@ public class SignUp extends AppCompatActivity {
     }
 
     private void sendData() {
-        String url = "http://";
-        StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Toast.makeText(SignUp.this, response, Toast.LENGTH_SHORT).show();
-            }
-        }, new Response.ErrorListener() {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("username", username.getText().toString());
+            jsonObject.put("mail", email.getText().toString());
+            jsonObject.put("password", password1.getText().toString());
+
+        } catch (JSONException e) {
+            Log.e("JSON Error", e.getMessage());
+        }
+
+        String url = "https://infinityrun.azurewebsites.net/api/User";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Data sent", "Success");
+                        Toast.makeText(SignUp.this, "Register Successful", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(SignUp.this, LogInActivity.class);
+                        startActivity(intent);
+                    }
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(SignUp.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d("Data sent", "Error: " + error.getMessage());
+                Toast.makeText(SignUp.this, "Register not successful", Toast.LENGTH_SHORT).show();
             }
-        }) {
-            @Nullable
-            @Override
-            protected HashMap<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<>();
-                params.put("username", usernameDatabase);
-                params.put("email", mailDatabase);
-                params.put("password", passwordDatabase);
-                return params;
-            }
-        };
-        RequestQueue queue = Volley.newRequestQueue(SignUp.this);
-        queue.add(request);
-
+        });
+        queue.add(jsonObjectRequest);
     }
 
 }

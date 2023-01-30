@@ -51,6 +51,16 @@ button{
     border-color:aquamarine;
 }
 
+#btn{
+    margin-left: 2%;
+    margin-top: 20px;
+    width: 95%;
+    height: 40px;
+    background-color:aquamarine;
+    border-radius: 10px;
+    border-color:aquamarine;
+}
+
 button:hover{
     opacity: 0.8;
 }

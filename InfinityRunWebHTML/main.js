@@ -74,7 +74,7 @@ function sendRoute(){
   xhr.send(jsonString);
 }
 
-xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/User/639158b08b3660204207cacb', true);
+xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/User/63970f9bd83230a9af442016', true);
 xhr.send();
 xhr.onreadystatechange = function() {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -86,29 +86,45 @@ xhr.onerror = function() {
     console.log("Error", xhr.statusText);
 }
 
-
+/*let marker = new google.maps.Marker({
+  map: map,            
+  position: new google.maps.LatLng(1, 1),
+  draggable: true,
+  icon: 'images/test.jpg'
+});*/
 //Daten werden alle 2 Sekunden aktualisiert
+let marker;
 setInterval(() => {
-  xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/UserData/639158b08b3660204207cacb', true);
+  //marker.remove();
+  xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/UserData/63970f9bd83230a9af442016', true);
   xhr.send();
   xhr.onreadystatechange = function() {
       if (xhr.readyState === 4 && xhr.status === 200) {
-          var data = JSON.parse(xhr.responseText);
-          document.getElementById('hr').innerHTML = data.heartRate;
-          document.getElementById('speed').innerHTML = data.speed;
-          var o = new google.maps.LatLng(data.location[0], data.location[1]);
-          let marker = new google.maps.Marker({
-            map: map,
-            position: o,
-            draggable: true,
-            icon: 'images/test.jpg'
+        var data = JSON.parse(xhr.responseText);
+        document.getElementById('hr').innerHTML = data.heartRate;
+        document.getElementById('speed').innerHTML = data.speed;
+        var o = new google.maps.LatLng(data.location[0], data.location[1]);
+        marker = new google.maps.Marker({
+          map: map,            
+          position: o,
+          draggable: true,
+          icon: 'images/runner.png'
         });
+        /*var marker = new google.maps.Marker({
+          map : map
+        });
+        marker.setPosition(o);*/
       }
   }
   xhr.onerror = function() {
       console.log("Error", xhr.statusText);
   }
-}, 2000);
+}, 1000);
+
+
+setInterval(() =>{
+  marker.setMap(null);
+}, 1000);
 
 
 //window.initMap = initMap;
