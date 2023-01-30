@@ -1,9 +1,15 @@
 package com.example.mobileapp_infinityrun;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,9 +20,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.button.MaterialButton;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -24,6 +35,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -31,6 +43,8 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LogInActivity extends AppCompatActivity {
 
@@ -39,6 +53,9 @@ public class LogInActivity extends AppCompatActivity {
     private RequestQueue queue;
     TextView username;
     TextView password;
+    List<MarkerOptions> placeList = new ArrayList<>();
+
+    String id = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +72,15 @@ public class LogInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 checkCredentials();
+                //getRouteFromDatabase();
 
                 //Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                 //Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                //Intent intent = new Intent(LogInActivity.this, Map.class);
+                Intent intent = new Intent(LogInActivity.this, Map.class);
                 // send username to Map
+                //intent.putExtra("placeList", (Serializable) placeList);
                 //intent.putExtra("username", username.getText().toString());
+                //intent.putExtra("id", id);
                 //startActivity(intent);
                 //GetDatabase(v);
             }
@@ -92,8 +112,11 @@ public class LogInActivity extends AppCompatActivity {
                             } else {
                                 Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(LogInActivity.this, Map.class);
-                                // send username to Map
+                                id = response.getString("_id");
+
+                                intent.putExtra("placeList", (Serializable) placeList);
                                 intent.putExtra("username", username.getText().toString());
+                                intent.putExtra("id", id);
                                 startActivity(intent);
                             }
 
@@ -113,92 +136,57 @@ public class LogInActivity extends AppCompatActivity {
         queue.add(jsonObjectRequest);
     }
 
+    private void getRouteFromDatabase() {
+        // Get the route from the database
+        String url = "https://infinityrun.azurewebsites.net/api/Route/63d7a992c93df0bd55d403d5";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
-    public void GetDatabase(View view) {
-        HttpURLConnection connection = null;
-
-
-
-        try{
-            URL url = new URL("https://infinityrun.azurewebsites.net/api/User/" + username.getText().toString() + "&" + password.getText().toString());
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-
-            connection.setUseCaches(false);
-            connection.setDoOutput(true);
-
-            //Send request
-            DataOutputStream wr = new DataOutputStream (
-                    connection.getOutputStream());
-            wr.close();
-
-            //Get Response
-            InputStream is = connection.getInputStream();
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-            StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
-            String line;
-            while ((line = rd.readLine()) != null) {
-                response.append(line);
-                response.append('\r');
-            }
-            rd.close();
-            System.out.println(response);
-
-        } catch (ProtocolException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        /*
-        /************************************************
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "https://infinityrun.azurewebsites.net/api/User/"+username.getText().toString()+"&"+password.getText().toString();
-        // Request a string response from the provided URL.
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            JSONObject user = response.getJSONObject("data");
+                            if(response == null) {
+                                // Toast message that no route is available
+                                Toast.makeText(LogInActivity.this, "No route is available", Toast.LENGTH_SHORT).show();
+                            } else {
+                                // get route array from response
+                                JSONArray tmp = response.getJSONArray("routePoints");
+                                // loop through the array
+                                for (int i = 0; i < tmp.length(); i++) {
+                                    // get the object from the array
+                                    JSONArray point = tmp.getJSONArray(i);
+                                    double lat = point.getDouble(0);
+                                    double lng = point.getDouble(1);
+                                    Log.d("route", String.valueOf(lat));
+                                    Log.d("route", String.valueOf(lng));
+                                    Log.d("route", String.valueOf(point));
+                                    placeList.add(new MarkerOptions().position(new LatLng(lat, lng)).title("Place " + (i + 1))
+                                            .icon(bitmapDescriptor(getApplicationContext(), R.drawable.ic_baseline_circle_24)));
+                                }
+                            }
 
-                            System.out.println("-----------------------------------------------------------------------");
-                            if(user == null){
-                                Toast.makeText(LogInActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
-                            }
-                            else{
-                                System.out.println("TEST111111111111111111111111111111111111111111111111111111111111");
-                                Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                                //Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(LogInActivity.this, Map.class);
-                                // send username to Map
-                                intent.putExtra("username", username.getText().toString());
-                                startActivity(intent);
-                            }
-                            //JSONArray jsonArray = response.getJSONArray("data");
 
-                            /*
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject data = jsonArray.getJSONObject(i);
-                                usernameDatabase = data.getString("username");
-                                mailDatabase = data.getString("mail");
-                                passwordDatabase = data.getString("password");
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            Toast.makeText(LogInActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-        // Add the request to the RequestQueue.
-        queue.add(jsonObjectRequest);
 
-         */
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(LogInActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+        queue.add(jsonObjectRequest);
     }
 
+    private BitmapDescriptor bitmapDescriptor(Context context, int vectorResId){
+        Drawable drawable = ContextCompat.getDrawable(context, vectorResId);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
 }

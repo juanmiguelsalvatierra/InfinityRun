@@ -41,7 +41,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -55,8 +62,15 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.button.MaterialButton;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback {
@@ -67,6 +81,7 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
     private BluetoothLeScanner bluetoothLeScanner;
     private boolean scanning;
     private static final String TAG = "MAP_RUNNER";
+    String id = "";
 
     private static final UUID hr_service = UUID.fromString("0000180d-0000-1000-8000-00805f9b34fb"); // HR
     private static final UUID hr_characteristic = UUID.fromString("00002a37-0000-1000-8000-00805f9b34fb"); // HR
@@ -74,6 +89,7 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
     private static final UUID client_characteristic = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
 
 
+    private RequestQueue queue;
     GoogleMap map;
     Polyline currentPolyline;
     static List<LatLng> latLngList = new ArrayList<>();
@@ -84,6 +100,10 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
     Chronometer chronometer;
     long pauseOffset;
     boolean timeIsRunning;
+    int heartRateForDatabase = 0;
+    float speed1 = 0;
+
+    Random rnd = new Random();
 
 
     @Override
@@ -92,9 +112,14 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
         setContentView(R.layout.activity_map_runner);
         chronometer = findViewById(R.id.timer);
 
+        queue = Volley.newRequestQueue(this);
+
         // Get the username from the previous activity
         TextView username = findViewById(R.id.username);
         username.setText(getIntent().getStringExtra("username"));
+
+        // Get the id from the previous activity
+        id = getIntent().getStringExtra("id");
 
         // Get the place list from the previous activity
         Bundle bundle = getIntent().getExtras();
@@ -113,7 +138,8 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
             }
         });
 
-        /*
+
+
         Log.d(TAG, "onCreate: ");
         if (!hasPermission(Map_Runner.this, permissions)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -121,7 +147,7 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
             }
         }
         scanLeDevice();
-        */
+
     }
 
     @Override
@@ -141,7 +167,6 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
         latLngList.add(placeList.get(0).getPosition());
 
         TextView speed = findViewById(R.id.speed);
-        TextView distance = findViewById(R.id.heartrate);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             map.setMyLocationEnabled(true);
@@ -160,8 +185,11 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
                 //markerAtCurrrentLocation = map.addMarker(new MarkerOptions().position(currentLocation).title("Current Location"));
                 // Zoom to current location
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+                speed1 = location.getSpeed() * 3.6f;
+                //sendData(heartRateForDatabase, speed1, new double[]{location.getLatitude(), location.getLongitude()});
+                sendData(speed1, new double[]{location.getLatitude(), location.getLongitude()});
                 //Get speed
-                speed.setText(String.valueOf((location.getSpeed() * 3.6f) / 1000) + " km/h");
+                speed.setText(String.valueOf(Math.round(speed1)) + " km/h");
             }
         };
 
@@ -170,6 +198,35 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
         currentPolyline = map.addPolyline(new PolylineOptions().addAll(latLngList).width(5).color(R.color.black));
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(placeList.get(0).getPosition(), 15));
+    }
+
+
+
+    private void sendData(double speed, double[] location) {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("userId", id);
+            //jsonObject.put("heartRate", heartRateForDatabase);
+            jsonObject.put("heartRate", rnd.nextInt(5) + 80);
+            jsonObject.put("speed", speed);
+            jsonObject.put("location", new JSONArray(location));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String url = "https://infinityrun.azurewebsites.net/api/Userdata";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("Data sent", "Success");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("Data sent", "Error: " + error.getMessage());
+            }
+        });
+        queue.add(jsonObjectRequest);
     }
 
     public void startTimer(View v) {
@@ -318,6 +375,7 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        heartRateForDatabase = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 1);
                         hrValue.setText(characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 1) + "");
                     }
                 });
