@@ -119,8 +119,6 @@ public class LogInActivity extends AppCompatActivity {
                                 intent.putExtra("id", id);
                                 startActivity(intent);
                             }
-
-
                         } catch (Exception e) {
                             Toast.makeText(LogInActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }

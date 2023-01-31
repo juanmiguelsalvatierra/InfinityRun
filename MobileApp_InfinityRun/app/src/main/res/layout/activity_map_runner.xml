@@ -24,8 +24,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="358dp"
-        android:layout_height="499dp"
+        android:layout_width="360dp"
+        android:layout_height="467dp"
         android:layout_below="@+id/username"
         app:cardCornerRadius="30dp"
         app:cardElevation="10dp"
@@ -42,6 +42,7 @@
             android:orientation="vertical"
             tools:layout_editor_absoluteX="-3dp"
             tools:layout_editor_absoluteY="332dp">
+
             <fragment
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -69,8 +70,8 @@
 
     <TextView
         android:id="@+id/speed"
-        android:layout_width="86dp"
-        android:layout_height="59dp"
+        android:layout_width="153dp"
+        android:layout_height="55dp"
         android:layout_below="@id/cardView"
         android:layout_alignParentLeft="true"
         android:background="@drawable/rounded_corner_blue"
@@ -82,14 +83,15 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline25"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.051"
+        app:layout_constraintHorizontal_bias="0.066"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline23" />
+        app:layout_constraintTop_toTopOf="@+id/guideline23"
+        app:layout_constraintVertical_bias="0.409" />
 
     <TextView
         android:id="@+id/heartrate"
-        android:layout_width="82dp"
-        android:layout_height="59dp"
+        android:layout_width="164dp"
+        android:layout_height="55dp"
         android:layout_below="@id/cardView"
         android:layout_alignParentRight="true"
         android:background="@drawable/rounded_corner_blue"
@@ -101,9 +103,10 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline25"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.951"
+        app:layout_constraintHorizontal_bias="0.925"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline23" />
+        app:layout_constraintTop_toTopOf="@+id/guideline23"
+        app:layout_constraintVertical_bias="0.409" />
 
     <Chronometer
         android:id="@+id/timer"
@@ -184,7 +187,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.74969023" />
+        app:layout_constraintGuide_percent="0.7" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline24"
