@@ -16,10 +16,10 @@ import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private static final UUID battery_service = UUID.fromString("0000180f-0000-1000-8000-00805f9b34fb"); // Battery
 
     private static final UUID batteryCharacteristic = UUID.fromString("00002a19-0000-1000-8000-00805f9b34fb"); // Battery
-
+    static String myDevice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,27 @@ public class MainActivity extends AppCompatActivity {
                 requestPermissions(permissions, permissionRequestCode);
             }
         }
-        scanLeDevice();
+
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null) {
+            // Device does not support Bluetooth
+        }
+        if (!mBluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            startActivityForResult(enableBtIntent, 1);
+        } else {
+            scanLeDevice();
+        }
     }
 
     @Override
@@ -93,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 Log.i(TAG, "Scan Result: " + result.getDevice().getName() + " : " + result.getDevice().getAddress());
+                myDevice = result.getDevice().getName();
 
                 if (result.getDevice().getAddress().equals("C1:2C:2A:24:FE:80")) {
                     scanning = true;
@@ -119,11 +140,26 @@ public class MainActivity extends AppCompatActivity {
                         return;
                     }
                     Log.i(TAG, "CONNECTED");
+
+                    // Connected Status für den User anzeigen
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(MainActivity.this, "Connected to " + myDevice, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
                     gatt.discoverServices();
                 } else {
                     if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                         scanning = false;
                         Log.i(TAG, "DISCONNECTED");
+
+                        // Disconnected Status für den User anzeigen
+                        MainActivity.this.runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(MainActivity.this, "Disconnected from " + myDevice, Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 }
             }
