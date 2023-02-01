@@ -1,4 +1,5 @@
 var coachname;
+var uid;
 
 function signup() {
   var username = document.getElementById("username").value;
@@ -8,12 +9,16 @@ function signup() {
   xhr.open("POST", "https://infinityrun.azurewebsites.net/api/User/", true);
   xhr.setRequestHeader("Content-Type", "application/json");
   xhr.onreadystatechange = function() {
-    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-      console.log(xhr.responseText);
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      console.log(xhr.status);
+      if (xhr.status === 201) {
+        window.location.href = "login.html";
+      } else {
+        console.error("Login failed");
+      }
     }
   };
   xhr.send(JSON.stringify({ username: username, mail: email, password: password }));
-  window.location.href = "login.html";
 }
 
 function login() {
@@ -28,6 +33,7 @@ function login() {
         var data = JSON.parse(xhr.responseText);
         window.location.href = "index.html";
         coachname = data.username;  
+        uid = data._id;
         document.getElementById("data").innerHTML = JSON.stringify(data);
       } else {
         console.error("Error retrieving data");
