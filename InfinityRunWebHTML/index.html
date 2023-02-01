@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script src="main.js"></script>
   </head>
-  <body>
+  <body onload="go()">
     <header>
       <img class="logo" src="images/logoblack.png" alt="logo">
       <nav>
@@ -17,7 +17,19 @@
           <li><a href="#">HOME</a></li>
           <li><a href="#">GROUPS</a></li>
           <li><a href="#">SETTINGS</a></li>
+          <li>
+            <div class="dropdown">
+              <button id="dropdown-btn">PROFILE</button>
+              <div class="dropdown-content">
+                <a href="#">Link 1</a>
+                <a href="#">Link 2</a>
+                <a href="login.html" style="color: red">Logout</a>
+              </div>
+            </div>
+        </li>
         </ul>
+        
+        
       </nav>
     </header>
     <div id="userdata">
@@ -28,28 +40,38 @@
           <th style="width: 40%"></th>
         </tr>
         <tr>
-          <th class="data"><h3>TIME</h3></th>
+          <!--<th class="data"><h3>TIME</h3></th>
+          <th></th>
+          <th class="data"><h3>HEARTRATE</h3></th>-->
+
+          <th class="data"><h3>SPEED</h3></th>
           <th></th>
           <th class="data"><h3>HEARTRATE</h3></th>
         </tr>
         <tr>
-          <th class="data"><h3>5:34</h3></th>
+          <!--<th class="data"><h3>5:34</h3></th>
+          <th></th>
+          <th class="data"><h3 id="hr">LOADING...</h3></th>-->
+
+          <th class="data"><h3 id="speed">LOADING...</h3></th>
           <th></th>
           <th class="data"><h3 id="hr">LOADING...</h3></th>
         </tr>
         <tr>
-          <th class="data"><h3>DISTANCE</h3></th>
+          <!--<th class="data"><h3>DISTANCE</h3></th>
           <th></th>
-          <th class="data"><h3>AVG. SPEED</h3></th>
+          <th class="data"><h3>AVG. SPEED</h3></th>-->
+
+          <th id ="example" colspan = "4"><input type="button" value="Send Route" id="btn" onclick="sendRoute ()"></th>
         </tr>
-        <tr>
+        <!--<tr>
           <th class="data"><h3>1.2 KM</h3></th>
           <th></th>
           <th class="data"><h3 id="speed">LOADING...</h3></th>
         </tr> 
         <tr>
-          <th id ="example"></th>
-        </tr>
+          <th id ="example" colspan = "4"><input type="button" value="Send Route" id="btn" onclick="sendRoute ()"></th>
+        </tr>-->
       </table>
     </div>
       <div id="map"></div>
