@@ -4,83 +4,31 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <title>Infinity Run | Coach Edition</title>
-    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>Infinity Run | Sign Up</title>
+    <link rel="stylesheet" type="text/css" href="stylesignup.css" />
     <script src="main.js"></script>
   </head>
-  <body onload="go()">
-    <header>
-      <img class="logo" src="images/logoblack.png" alt="logo">
-      <nav>
-        <!--<h1>Infinity Run</h1>-->
-        <ul class = "nav_links">
-          <li><a href="#">HOME</a></li>
-          <li><a href="#">GROUPS</a></li>
-          <li><a href="#">SETTINGS</a></li>
-          <li>
-            <div class="dropdown">
-              <button id="dropdown-btn">PROFILE</button>
-              <div class="dropdown-content">
-                <a href="#">Link 1</a>
-                <a href="#">Link 2</a>
-                <a href="login.html" style="color: red">Logout</a>
-              </div>
-            </div>
-        </li>
-        </ul>
-        
-        
-      </nav>
-    </header>
-    <div id="userdata">
-      <table id="usertable">
-        <tr>
-          <th style="width: 40%"></th>
-          <th><h2 id="username">LOADING...</h2></th>
-          <th style="width: 40%"></th>
-        </tr>
-        <tr>
-          <!--<th class="data"><h3>TIME</h3></th>
-          <th></th>
-          <th class="data"><h3>HEARTRATE</h3></th>-->
-
-          <th class="data"><h3>SPEED</h3></th>
-          <th></th>
-          <th class="data"><h3>HEARTRATE</h3></th>
-        </tr>
-        <tr>
-          <!--<th class="data"><h3>5:34</h3></th>
-          <th></th>
-          <th class="data"><h3 id="hr">LOADING...</h3></th>-->
-
-          <th class="data"><h3 id="speed">LOADING...</h3></th>
-          <th></th>
-          <th class="data"><h3 id="hr">LOADING...</h3></th>
-        </tr>
-        <tr>
-          <!--<th class="data"><h3>DISTANCE</h3></th>
-          <th></th>
-          <th class="data"><h3>AVG. SPEED</h3></th>-->
-
-          <th id ="example" colspan = "4"><input type="button" value="Send Route" id="btn" onclick="sendRoute ()"></th>
-        </tr>
-        <!--<tr>
-          <th class="data"><h3>1.2 KM</h3></th>
-          <th></th>
-          <th class="data"><h3 id="speed">LOADING...</h3></th>
-        </tr> 
-        <tr>
-          <th id ="example" colspan = "4"><input type="button" value="Send Route" id="btn" onclick="sendRoute ()"></th>
-        </tr>-->
-      </table>
+  <body>
+    <img class="logo" src="images/logoblack.png" alt="logo">
+    <div class="center">
+      <h1>Sign Up</h1>
+      <form method="post">
+        <div class="txt_field">
+          <input type="email" name="email" id="email" placeholder="E-Mail" required>
+        </div>
+        <div class="txt_field">
+            <input type="username" name="username" id="username" placeholder="Username" required>
+          </div>
+        <div class="txt_field">
+          <input type="password" name="password" id="password" placeholder="Password" required>
+        </div>
+        <p class="login">Already have an account? <a href="login.html">Login</a></p>
+        <!--<a href="index.html">
+            <input type="button" value="Sign Up" onclick="submitForm()">
+            <button type="button" onclick="submitForm()">LOGIN</button>
+        </a>-->
+        <input type="button" value="Sign Up" id="btn" onclick="signup()">
+      </form>
     </div>
-      <div id="map"></div>
-        <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly"
-        defer
-        ></script>
-    </div>
-    <!--<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js">-->
-
-    </body>
+  </body>
 </html>

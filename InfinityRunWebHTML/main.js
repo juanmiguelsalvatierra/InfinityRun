@@ -78,7 +78,9 @@ function sendRoute(){
   xhr.send(jsonString);
 }
 
-xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/User/63970f9bd83230a9af442016', true);
+//xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/User/63970f9bd83230a9af442016', true);
+xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/User/63da36d9d33d8be0b81cafe4', true);
+
 xhr.send();
 xhr.onreadystatechange = function() {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -122,11 +124,13 @@ function go(){
     }
   };
   xhr.send();*/
-  document.getElementById('dropdown-btn').innerHTML = coachname;
+  var username = localStorage.getItem("username");
+  document.getElementById("dropdown-btn").innerHTML = username;
   //Daten werden alle 2 Sekunden aktualisiert
   setInterval(() => {
     //marker.remove();
-    xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/UserData/63970f9bd83230a9af442016', true);
+    //xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/UserData/63970f9bd83230a9af442016', true);
+    xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/UserData/63da36d9d33d8be0b81cafe4', true);
     xhr.send();
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
@@ -186,6 +190,7 @@ async function signup() {
 async function login() {
   var username = document.getElementById("username").value;
   var password = await hashString(document.getElementById("password").value);
+  localStorage.setItem("username", username);
   var xhr = new XMLHttpRequest();
   xhr.open("GET", "https://infinityrun.azurewebsites.net/api/User/"+username+"&"+password, true);
   xhr.onreadystatechange = function() {
@@ -193,7 +198,7 @@ async function login() {
       if (xhr.status === 200) {
         console.log("Data received");
         var data = JSON.parse(xhr.responseText);
-        window.location.href = "index.html";
+        window.location.href = "main.html";
         coachname = data.username;  
         console.log(coachname);
         uid = data._id;
