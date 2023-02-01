@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BluetoothLeScanner bluetoothLeScanner;
     private boolean scanning;
+    private Handler handler = new Handler();
     private static final String TAG = "MainActivityA";
 
     private static final UUID hr_service = UUID.fromString("0000180d-0000-1000-8000-00805f9b34fb"); // HR
@@ -40,9 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private static final UUID hr_control_characteristic = UUID.fromString("00002a39-0000-1000-8000-00805f9b34fb"); // HR
     private static final UUID client_characteristic = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
 
-    private static final UUID battery_service = UUID.fromString("0000180f-0000-1000-8000-00805f9b34fb"); // Battery
-
-    private static final UUID batteryCharacteristic = UUID.fromString("00002a19-0000-1000-8000-00805f9b34fb"); // Battery
     static String myDevice;
 
     @Override
@@ -94,12 +93,48 @@ public class MainActivity extends AppCompatActivity {
         bluetoothLeScanner = btAdapter.getBluetoothLeScanner();
 
         if (!scanning) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
+            // Stops scanning after a predefined scan period.
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    scanning = false;
+                    if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
+                    bluetoothLeScanner.stopScan(leScanCallback);
+                    Log.d(TAG, "Stopped scanning after 10 seconds!");
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(MainActivity.this, "Stopped scanning after 10 seconds!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }, 10000); // 10 Sekunden
+
+            scanning = true;
             bluetoothLeScanner.startScan(leScanCallback);
+            Log.d(TAG, "Scanning... ");
+            MainActivity.this.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(MainActivity.this, "Scanning...", Toast.LENGTH_SHORT).show();
+                }
+            });
         } else {
+            scanning = false;
             bluetoothLeScanner.stopScan(leScanCallback);
+            Log.d(TAG, "Stopped scanning!");
+            MainActivity.this.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(MainActivity.this, "Stopped scanning!", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
@@ -108,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
         public void onScanResult(int callbackType, ScanResult result) {
             super.onScanResult(callbackType, result);
 
-            if (!scanning) {
+            if (scanning) {
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
@@ -116,7 +151,8 @@ public class MainActivity extends AppCompatActivity {
                 myDevice = result.getDevice().getName();
 
                 if (result.getDevice().getAddress().equals("C1:2C:2A:24:FE:80")) {
-                    scanning = true;
+                    scanning = false;
+                    Log.i(TAG, "Device found...");
                     if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
                         return;
                     }
