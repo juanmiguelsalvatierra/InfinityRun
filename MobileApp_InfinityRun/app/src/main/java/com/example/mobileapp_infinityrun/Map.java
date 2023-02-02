@@ -79,6 +79,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
         queue = Volley.newRequestQueue(this);
         username = findViewById(R.id.username);
 
+        //getRouteFromDatabase();
+
         // Get username from previous activity and set it to the textview
         username.setText(getIntent().getStringExtra("username"));
 
@@ -138,11 +140,11 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
         map = googleMap;
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-        getRouteFromDatabase();
+        //getRouteFromDatabase();
 
 
             // Connect places
-        /*
+
         placeList.add(new MarkerOptions().position(new LatLng(48.22153, 16.44409)).title("Place 1")
                 .icon(bitmapDescriptor(getApplicationContext(), R.drawable.ic_baseline_circle_24)));
         placeList.add(new MarkerOptions().position(new LatLng(48.22108, 16.44649)).title("Place 2")
@@ -151,7 +153,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
                 .icon(bitmapDescriptor(getApplicationContext(), R.drawable.ic_baseline_circle_24)));
         placeList.add(new MarkerOptions().position(new LatLng(48.22048, 16.44386)).title("Place 4")
                 .icon(bitmapDescriptor(getApplicationContext(), R.drawable.ic_baseline_circle_24)));
-         */
+
 
         // Check if the placeList is empty
         if(placeList.isEmpty()) return;
@@ -186,7 +188,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
 
     private void getRouteFromDatabase() {
         // Get the route from the database
-        String url = "https://infinityrun.azurewebsites.net/api/Route/63d7a992c93df0bd55d403d5";
+        String url = "https://infinityrun.azurewebsites.net/api/Route/639158b08b3660204207cacb?coach=false";// + id +"?coach=false";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 

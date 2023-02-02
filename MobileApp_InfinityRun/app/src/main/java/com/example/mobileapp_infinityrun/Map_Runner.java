@@ -16,6 +16,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.view.View;
 import android.widget.Chronometer;
@@ -70,6 +71,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -82,6 +84,7 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
 
     private BluetoothLeScanner bluetoothLeScanner;
     private boolean scanning;
+    private Handler handler = new Handler();
     private static final String TAG = "MAP_RUNNER";
     String id = "";
 
@@ -89,7 +92,7 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
     private static final UUID hr_characteristic = UUID.fromString("00002a37-0000-1000-8000-00805f9b34fb"); // HR
     private static final UUID hr_control_characteristic = UUID.fromString("00002a39-0000-1000-8000-00805f9b34fb"); // HR
     private static final UUID client_characteristic = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
-
+    static String myDevice;
 
     private RequestQueue queue;
     GoogleMap map;
@@ -101,10 +104,12 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
 
     Chronometer chronometer;
     long pauseOffset;
-    boolean timeIsRunning;
-    int heartRateForDatabase = 0;
+    boolean timeIsRunning, sendToDatabase;
     float speed1 = 0;
-
+    double lat, lng;
+    int heartRateForDatabase = 0;
+    Handler handlerForDatabase;
+    Runnable runnable;
     Random rnd = new Random();
 
 
@@ -130,6 +135,19 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        handlerForDatabase = new Handler();
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (sendToDatabase) {
+                    sendData(speed1, new double[]{lat, lng});
+                }
+                handlerForDatabase.postDelayed(this, 1000); // jede Sekunde aufrufen
+            }
+        };
+        handlerForDatabase.postDelayed(runnable, 1000);
+
+
         // Button to Logout
         MaterialButton logoutbtn = (MaterialButton) findViewById(R.id.logoutbutton);
         logoutbtn.setOnClickListener(new View.OnClickListener() {
@@ -147,14 +165,22 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
                 requestPermissions(permissions, permissionRequestCode);
             }
         }
+
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
             // Device does not support Bluetooth
             return;
         }
-        if (!bluetoothAdapter.isEnabled()) {
+        if (!bluetoothAdapter.isEnabled()){
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 
+
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null) {
+            // Device does not support Bluetooth
+        }
+        if (!mBluetoothAdapter.isEnabled()) {
+            //Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
@@ -168,6 +194,9 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
             startActivityForResult(enableBtIntent, 1);
         }
         scanLeDevice();
+        } else {
+            scanLeDevice();
+        }
 
     }
 
@@ -206,11 +235,12 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
                 //markerAtCurrrentLocation = map.addMarker(new MarkerOptions().position(currentLocation).title("Current Location"));
                 // Zoom to current location
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
-                speed1 = location.getSpeed() * 3.6f;
-                //sendData(heartRateForDatabase, speed1, new double[]{location.getLatitude(), location.getLongitude()});
-                sendData(speed1, new double[]{location.getLatitude(), location.getLongitude()});
+                speed1 = Math.round(location.getSpeed() * 3.6f);
+                lng = location.getLongitude();
+                lat = location.getLatitude();
+                //sendData(speed1, new double[]{location.getLatitude(), location.getLongitude()});
                 //Get speed
-                speed.setText(String.valueOf(Math.round(speed1)) + " km/h");
+                speed.setText(String.valueOf(speed1) + " km/h");
             }
         };
 
@@ -228,8 +258,8 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("userId", id);
-            //jsonObject.put("heartRate", heartRateForDatabase);
-            jsonObject.put("heartRate", rnd.nextInt(5) + 80);
+            jsonObject.put("heartRate", heartRateForDatabase);
+            //jsonObject.put("heartRate", rnd.nextInt(5) + 80);
             jsonObject.put("speed", speed);
             jsonObject.put("location", new JSONArray(location));
         } catch (JSONException e) {
@@ -255,6 +285,7 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
             chronometer.setBase(SystemClock.elapsedRealtime());
             chronometer.start();
             timeIsRunning = true;
+            sendToDatabase = true;
         }
     }
 
@@ -276,6 +307,7 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
                 }
             });
             queue.add(jsonObjectRequest);
+            sendToDatabase = false;
         }
     }
 
@@ -304,12 +336,48 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
         bluetoothLeScanner = btAdapter.getBluetoothLeScanner();
 
         if (!scanning) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
+            // Stops scanning after a predefined scan period.
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    scanning = false;
+                    if (ActivityCompat.checkSelfPermission(Map_Runner.this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
+                    bluetoothLeScanner.stopScan(leScanCallback);
+                    Log.d(TAG, "Stopped scanning after 10 seconds!");
+                    Map_Runner.this.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(Map_Runner.this, "Stopped scanning after 10 seconds!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }, 10000); // 10 Sekunden delay
+
+            scanning = true;
             bluetoothLeScanner.startScan(leScanCallback);
+            Log.d(TAG, "Scanning... ");
+            Map_Runner.this.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(Map_Runner.this, "Scanning...", Toast.LENGTH_SHORT).show();
+                }
+            });
         } else {
+            scanning = false;
             bluetoothLeScanner.stopScan(leScanCallback);
+            Log.d(TAG, "Stopped scanning!");
+            Map_Runner.this.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(Map_Runner.this, "Stopped scanning!", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
@@ -318,14 +386,16 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
         public void onScanResult(int callbackType, ScanResult result) {
             super.onScanResult(callbackType, result);
 
-            if (!scanning) {
+            if (scanning) {
                 if (ActivityCompat.checkSelfPermission(Map_Runner.this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
                 Log.i(TAG, "Scan Result: " + result.getDevice().getName() + " : " + result.getDevice().getAddress());
 
                 if (result.getDevice().getAddress().equals("C1:2C:2A:24:FE:80")) {
-                    scanning = true;
+                    myDevice = result.getDevice().getName();
+                    scanning = false;
+                    Log.i(TAG, "Device found...");
                     if (ActivityCompat.checkSelfPermission(Map_Runner.this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
                         return;
                     }
@@ -349,11 +419,24 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
                         return;
                     }
                     Log.i(TAG, "CONNECTED");
+                    // Connected Status für den User anzeigen
+                    Map_Runner.this.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(Map_Runner.this, "Connected to " + myDevice, Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     gatt.discoverServices();
                 } else {
                     if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                         scanning = false;
                         Log.i(TAG, "DISCONNECTED");
+
+                        // Disconnected Status für den User anzeigen
+                        Map_Runner.this.runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(Map_Runner.this, "Disconnected from " + myDevice, Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 }
             }

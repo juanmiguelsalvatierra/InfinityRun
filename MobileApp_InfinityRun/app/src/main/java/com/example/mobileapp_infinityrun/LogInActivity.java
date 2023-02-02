@@ -76,7 +76,7 @@ public class LogInActivity extends AppCompatActivity {
 
                 //Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                 //Toast.makeText(LogInActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(LogInActivity.this, Map.class);
+                //Intent intent = new Intent(LogInActivity.this, Map.class);
                 // send username to Map
                 //intent.putExtra("placeList", (Serializable) placeList);
                 //intent.putExtra("username", username.getText().toString());
@@ -136,7 +136,7 @@ public class LogInActivity extends AppCompatActivity {
 
     private void getRouteFromDatabase() {
         // Get the route from the database
-        String url = "https://infinityrun.azurewebsites.net/api/Route/63d7a992c93df0bd55d403d5";
+        String url = "https://infinityrun.azurewebsites.net/api/Route/" + id + "?coach=false";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
