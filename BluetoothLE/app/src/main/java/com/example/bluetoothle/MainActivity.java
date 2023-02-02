@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     private static final UUID hr_characteristic = UUID.fromString("00002a37-0000-1000-8000-00805f9b34fb"); // HR
     private static final UUID hr_control_characteristic = UUID.fromString("00002a39-0000-1000-8000-00805f9b34fb"); // HR
     private static final UUID client_characteristic = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
-
     static String myDevice;
 
     @Override
@@ -71,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 // for ActivityCompat#requestPermissions for more details.
                 return;
             }
-            startActivityForResult(enableBtIntent, 1);
+            startActivityForResult(enableBtIntent, 1); // requestCode muss größer oder gleich 0 sein
         } else {
             scanLeDevice();
         }
@@ -116,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 }
-            }, 10000); // 10 Sekunden
+            }, 10000); // 10 Sekunden delay
 
             scanning = true;
             bluetoothLeScanner.startScan(leScanCallback);
@@ -148,9 +147,9 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 Log.i(TAG, "Scan Result: " + result.getDevice().getName() + " : " + result.getDevice().getAddress());
-                myDevice = result.getDevice().getName();
 
                 if (result.getDevice().getAddress().equals("C1:2C:2A:24:FE:80")) {
+                    myDevice = result.getDevice().getName();
                     scanning = false;
                     Log.i(TAG, "Device found...");
                     if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
@@ -176,14 +175,12 @@ public class MainActivity extends AppCompatActivity {
                         return;
                     }
                     Log.i(TAG, "CONNECTED");
-
                     // Connected Status für den User anzeigen
                     MainActivity.this.runOnUiThread(new Runnable() {
                         public void run() {
                             Toast.makeText(MainActivity.this, "Connected to " + myDevice, Toast.LENGTH_SHORT).show();
                         }
                     });
-
                     gatt.discoverServices();
                 } else {
                     if (newState == BluetoothProfile.STATE_DISCONNECTED) {
