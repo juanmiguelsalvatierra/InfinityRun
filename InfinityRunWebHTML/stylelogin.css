@@ -53,7 +53,7 @@ h1 {
 
 #error-message{
     text-align: center;
-    color: aquamarine;
+    color: red;
     font-weight: bold;
     margin-top: 10px;
 }

@@ -206,3 +206,8 @@ span.psw {
   font-weight: bold;
   color: black;
 }
+
+#btn:hover{
+  opacity: 0.8;
+}
+ 

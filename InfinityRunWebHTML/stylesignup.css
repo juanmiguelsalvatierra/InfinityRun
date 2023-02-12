@@ -75,3 +75,10 @@ a{
     color: aquamarine;
     font-family: tahoma;
 }
+
+#error-message{
+    text-align: center;
+    color: aquamarine;
+    font-weight: bold;
+    margin-top: 10px;
+}
