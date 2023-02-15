@@ -24,6 +24,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 public class SignUp extends AppCompatActivity {
@@ -101,12 +103,27 @@ public class SignUp extends AppCompatActivity {
     }
 
     private void sendData() {
+        String password = password1.getText().toString();
+        String hashedPassword = "";
+
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(password.getBytes());
+            byte[] digest = md.digest();
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : digest) {
+                hexString.append(String.format("%02x", b));
+            }
+            hashedPassword = hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
 
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("username", username.getText().toString());
             jsonObject.put("mail", email.getText().toString());
-            jsonObject.put("password", password1.getText().toString());
+            jsonObject.put("password", hashedPassword);
 
         } catch (JSONException e) {
             Log.e("JSON Error", e.getMessage());
