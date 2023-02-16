@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <title>Infinity Run | Add Runners</title>
+    <link rel="stylesheet" type="text/css" href="stylegroup.css" />
+    <script src="main.js"></script>
+  </head>
+  <body>
+    <h1>Infinity Run</h1>
+    <!--<img class="logo" src="images/logoblack.png" alt="logo">-->
+    <div class="center">
+      <h1>Groups</h1>
+      <form method="post">
+        <div class="txt_field">
+          <input type="text" name="runner" id="runner" placeholder="Enter Runners name" required>
+        </div>
+        <!--<a href="index.html">
+          <button type="submit" onclick="login()">LOGIN</button>
+        </a>-->
+        <table id="buttons">
+          <tr>
+            <th><input type="button" value="Add Group" id="btn-group" onclick="sendGroup()"></th>
+            <th><input type="button" value="Add Runner" id="btn-runner" onclick="addRunner()"></th>
+          </tr>
+        </table>
+        <!--<input type="button" value="Add Group" id="btn" onclick="sendGroup()">-->
+      </form>
+      <div id="error-message" style="display:none;">
+        Login failed. Please try again.
+      </div>
+    </div>
+  </body>
+</html>

@@ -7,6 +7,10 @@ var route = [];
 let polyline = null;
 
 var coachname;
+
+var groupArray = [];
+let selectedGroup;
+let currentrunners = [];
 var uid = "63970f9bd83230a9af442016";
 
 
@@ -89,14 +93,6 @@ xhr.onreadystatechange = function() {
     }
 }
 
-/*xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/User/63970f9bd83230a9af442016', true);
-xhr.send();
-xhr.onreadystatechange = function() {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-        var data = JSON.parse(xhr.responseText);
-        document.getElementById('test').innerHTML = data.username;
-    }
-}*/
 xhr.onerror = function() {
     console.log("Error", xhr.statusText);
 }
@@ -109,21 +105,28 @@ xhr.onerror = function() {
 });*/
 let marker;
 function go(){
-  /*var xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://infinityrun.azurewebsites.net/api/User/"+uid, true);
+
+  var selectedgroup = localStorage.getItem("selectedGroup");
+  var userid = localStorage.getItem("userid");
+  xhr.open("GET", "https://infinityrun.azurewebsites.net/api/UserGroup/"+userid+"&1", true);
   xhr.onreadystatechange = function() {
     if (xhr.readyState === XMLHttpRequest.DONE) {
       if (xhr.status === 200) {
         console.log("Data received");
         var data = JSON.parse(xhr.responseText);
-        document.getElementById("dropdown-btn").innerHTML = data.username;
+        //console.log(data);
+        //document.getElementById('selectedgroupname').innerHTML = data[selectedgroup].name;
+        //document.getElementById('showrunner').innerHTML = data[selectedgroup].runners;
+        currentrunners = data[selectedgroup].runners;
+        console.log(currentrunners);
       } else {
         console.error("Error retrieving data");
         document.getElementById("error-message").style.display = "block";
       }
     }
   };
-  xhr.send();*/
+  xhr.send();
+
   var username = localStorage.getItem("username");
   document.getElementById("dropdown-btn").innerHTML = username;
   //Daten werden alle 2 Sekunden aktualisiert
@@ -198,10 +201,11 @@ async function login() {
       if (xhr.status === 200) {
         console.log("Data received");
         var data = JSON.parse(xhr.responseText);
-        window.location.href = "main.html";
+        window.location.href = "allgroups.html";
         coachname = data.username;  
         console.log(coachname);
         uid = data._id;
+        localStorage.setItem("userid", uid);
         //document.getElementById("data").innerHTML = JSON.stringify(data);
       } else {
         console.error("Error retrieving data");
@@ -222,3 +226,168 @@ async function hashString(data) {
   console.log(hashHex);
   return hashHex;
 } 
+
+function getGroup(){
+  var username = localStorage.getItem("username");
+  document.getElementById("dropdown-btn").innerHTML = username;
+  var userid = localStorage.getItem("userid");
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "https://infinityrun.azurewebsites.net/api/UserGroup/"+userid+"&1", true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (xhr.status === 200) {
+        console.log("Data received");
+        var data = JSON.parse(xhr.responseText);
+        console.log(data);
+        document.getElementById('group1').innerHTML = data[0].name;
+        localStorage.setItem("group1ID", data[0]._id);
+
+        document.getElementById('group2').innerHTML = data[1].name;
+        localStorage.setItem("group2ID", data[1]._id);
+
+        document.getElementById('group3').innerHTML = data[2].name;
+        localStorage.setItem("group3ID", data[2]._id);
+
+        groupArray[data[0]._id, data[1]._id, data[2]._id];
+      } else {
+        console.error("Error retrieving data");
+        document.getElementById("error-message").style.display = "block";
+      }
+    }
+  };
+  xhr.send();
+}
+
+function sendGroup(checksum){
+  switch (checksum){
+    case 1:
+      var groupname = document.getElementById("groupname1").value;
+    case 2:
+      var groupname = document.getElementById("groupname2").value;
+    case 3:
+      var groupname = document.getElementById("groupname3").value;
+  }
+  var userid = localStorage.getItem("userid");
+  let gdata = {"userid" : userid, "name": groupname};
+  xhr.open("POST", "https://infinityrun.azurewebsites.net/api/Usergroup", true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      console.log(xhr.status);
+      if (xhr.status === 201) { 
+        //window.location.href = "login.html";
+        console.log("Group added");
+      } else {
+        console.error("Sign Up failed");
+      }
+    }
+  };
+  xhr.send(JSON.stringify({ userId: userid, name: groupname}));
+
+  xhr.open("GET", "https://infinityrun.azurewebsites.net/api/UserGroup/63da370ed33d8be0b81cafe5&1", true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (xhr.status === 200) {
+        console.log("Data received");
+        var data = JSON.parse(xhr.responseText);
+        //console.log(data);
+        document.getElementById('group1').innerHTML = data[0].name;
+        document.getElementById('group2').innerHTML = data[1].name;
+        document.getElementById('group3').innerHTML = data[2].name;
+        groupArray[data[0]._id, data[1]._id, data[2]._id];
+        console.log(groupArray);
+      } else {
+        console.error("Error retrieving data");
+        document.getElementById("error-message").style.display = "block";
+      }
+    }
+  };
+  xhr.send();
+}
+
+function addRunner(checksum){
+  let currentgroup;
+  switch (checksum){
+    case 1:
+      var runner = document.getElementById("runnername1").value;
+      currentgroup = localStorage.getItem("group1ID");
+      console.log("test");
+      break;
+    case 2:
+      var runner = document.getElementById("runnername2").value;
+      currentgroup = localStorage.getItem("group2ID");
+      console.log("test");
+      break;
+    case 3:
+      var runner = document.getElementById("runnername3").value;
+      currentgroup = localStorage.getItem("group3ID");
+      console.log("test");
+      break;
+  }
+  var xhr = new XMLHttpRequest();
+  //var runner = document.getElementById("runnername3").value;
+  //var userid = localStorage.getItem("userid");
+  //var gdata = {"id" : "63ec8fc65847f1a8553b0ce5", "username": runner, "a" : 1};
+  xhr.open("PUT", "https://infinityrun.azurewebsites.net/api/UserGroup/"+currentgroup+"&"+runner+"&1", true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      console.log(xhr.status);
+      if (xhr.status === 204) { 
+        //window.location.href = "login.html";
+        console.log("Runner added");
+      } else {
+        console.error("Add failed");
+      }
+    }
+  };
+  xhr.send(JSON.stringify({}));
+}
+
+function groupSelect(checksum){
+  switch (checksum){
+    case 1:
+      selectedgroup = localStorage.getItem("group1ID");
+      localStorage.setItem("selectedGroup", 0);
+      console.log(localStorage.getItem("selectedGroup"));
+      break;
+    case 2:
+      selectedgroup = localStorage.getItem("group2ID");
+      localStorage.setItem("selectedGroup", 1);
+      console.log(localStorage.getItem("selectedGroup"));
+      break;
+    case 3:
+      selectedgroup = localStorage.getItem("group3ID");
+      localStorage.setItem("selectedGroup", 2);
+      console.log(localStorage.getItem("selectedGroup"));
+      break;
+  }
+
+  console.log(localStorage.getItem("selectedGroup"));
+  window.location.href = "showgroup.html";
+}
+
+function getSelectedGroup(){
+  var selectedgroup = localStorage.getItem("selectedGroup");
+  var userid = localStorage.getItem("userid");
+  xhr.open("GET", "https://infinityrun.azurewebsites.net/api/UserGroup/"+userid+"&1", true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (xhr.status === 200) {
+        console.log("Data received");
+        var data = JSON.parse(xhr.responseText);
+        //console.log(data);
+        document.getElementById('selectedgroupname').innerHTML = data[selectedgroup].name;
+        document.getElementById('showrunner').innerHTML = data[selectedgroup].runners;
+      } else {
+        console.error("Error retrieving data");
+        document.getElementById("error-message").style.display = "block";
+      }
+    }
+  };
+  xhr.send();
+}
+
+function goMain(){
+  window.location.href = "main.html";
+}

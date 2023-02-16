@@ -3,6 +3,7 @@ body {
     height: 100vh;
     background-color: #353c47;
     font-family: Tahoma;
+    overflow: hidden;
 }
 
 .logo {
