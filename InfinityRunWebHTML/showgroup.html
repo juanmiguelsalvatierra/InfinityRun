@@ -21,7 +21,7 @@
                 <button id="dropdown-btn">PROFILE</button>
                 <div class="dropdown-content">
                   <a href="#">SETTINGS</a>
-                  <a href="login.html" style="color: red">LOGOUT</a>
+                  <a href="login.html" style="color: red" onclick="logout()">LOGOUT</a>
                 </div>
               </div>
           </li>
@@ -31,8 +31,11 @@
     <!--<img class="logo" src="images/logoblack.png" alt="logo">-->
     <div class="center">
         <h1 id="selectedgroupname">-----</h1>
-        <p id ="showrunner">----</p>
-        <input type="button" value="SELECT" class="btn-group" onclick="goMain()">
+        <div id ="runners">
+            <h2>Runners</h2>
+            <p id ="showrunner">----</p>
+            <input type="button" value="SELECT" class="btn-group" onclick="goMain()">
+        </div>
     </div>
   </body>
 </html>

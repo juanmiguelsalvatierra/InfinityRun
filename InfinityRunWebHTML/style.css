@@ -136,9 +136,9 @@ h1 {
   width: 30%;
 }
 
-table, th, tr {
-  /*border: 1px solid black;*/
-}
+/*table, th, tr {
+  border: 1px solid black;
+}*/
 
 h3 {
   text-align: center;

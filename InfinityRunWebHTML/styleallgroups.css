@@ -12,6 +12,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);*/
     margin: auto;
+    padding: 10px;
     background-color: #454e5c;
     height: 70%;
     width: 90%;
@@ -131,4 +132,9 @@ h1 {
 
 h2 {
     color: white;
+}
+
+#groupname1, #groupname2, #groupname3, #runnername1, #runnername2, #runnername3 {
+  height: 40px;
+  border-radius: 10px;
 }
