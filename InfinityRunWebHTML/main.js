@@ -308,9 +308,10 @@ function sendGroup(checksum){
     if (xhr.readyState === XMLHttpRequest.DONE) {
       console.log(xhr.status);
       alert(xhr.responseText);
+      location.reload();
       /*if (xhr.status === 201) { 
         //window.location.href = "login.html";
-        console.log("Group added");
+        console.log("Group added"); 
       } else {
         console.error("Sign Up failed");
       }*/
