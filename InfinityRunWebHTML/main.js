@@ -20,6 +20,7 @@ function logout(){
   localStorage.setItem("group2ID", null);
   localStorage.setItem("group3ID", null);
   localStorage.setItem("selectedgroup", null);
+  localStorage.setItem("currentgroup", null);
   window.location.href = "login.html";
 }
 
@@ -273,6 +274,7 @@ function getGroup(){
         document.getElementById('group3').innerHTML = data[2].name;
         localStorage.setItem("group3ID", data[2]._id);
 
+        //location.reload();
         groupArray[data[0]._id, data[1]._id, data[2]._id];
       } else {
         console.error("Error retrieving data");
@@ -284,7 +286,7 @@ function getGroup(){
 }
 
 function sendGroup(checksum){
-  switch (checksum){
+  /*switch (checksum){
     case 1:
       var groupname = document.getElementById("groupname1").value;
       break;
@@ -294,7 +296,8 @@ function sendGroup(checksum){
     case 3:
       var groupname = document.getElementById("groupname3").value;
       break;
-  }
+  }*/
+  var groupname = document.getElementById("groupname").value;
   var userid = localStorage.getItem("userid");
   console.log(userid);
   console.log(groupname);
@@ -304,12 +307,13 @@ function sendGroup(checksum){
   xhr.onreadystatechange = function() {
     if (xhr.readyState === XMLHttpRequest.DONE) {
       console.log(xhr.status);
-      if (xhr.status === 201) { 
+      alert(xhr.responseText);
+      /*if (xhr.status === 201) { 
         //window.location.href = "login.html";
         console.log("Group added");
       } else {
         console.error("Sign Up failed");
-      }
+      }*/
     }
   };
   xhr.send(JSON.stringify({ userId: userid, name: groupname, a: 1}));
@@ -325,6 +329,7 @@ function sendGroup(checksum){
         document.getElementById('group2').innerHTML = data[1].name;
         document.getElementById('group3').innerHTML = data[2].name;
         groupArray[data[0]._id, data[1]._id, data[2]._id];
+        location.reload();
         //console.log(groupArray);
       } else {
         console.error("Error retrieving data");
@@ -335,7 +340,7 @@ function sendGroup(checksum){
   xhr.send();
 }
 
-function addRunner(checksum){
+/*function addRunner(checksum){
   let currentgroup;
   switch (checksum){
     case 1:
@@ -372,22 +377,49 @@ function addRunner(checksum){
     }
   };
   xhr.send(JSON.stringify({}));
+}*/
+
+function addRunner(){
+  let currentgroup = localStorage.getItem("currentgroup");
+  var runner = document.getElementById("runnernew").value;
+  var xhr = new XMLHttpRequest();
+  xhr.open("PUT", "https://infinityrun.azurewebsites.net/api/UserGroup/"+currentgroup+"&"+runner+"&1", true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      console.log(xhr.status);
+      alert(xhr.responseText);
+      location.reload();
+      /*if (xhr.status === 200) { 
+        //window.location.href = "login.html";
+        console.log("Runner added");
+        alert(xhr.responseText);
+        //location.reload();
+      } else {
+        console.error("Add failed");
+      }*/
+    }
+  };
+  xhr.send(JSON.stringify({}));
 }
 
 function groupSelect(checksum){
   switch (checksum){
     case 1:
       selectedgroup = localStorage.getItem("group1ID");
+      localStorage.setItem("currentgroup", selectedgroup);
       localStorage.setItem("selectedGroup", 0);
       console.log(localStorage.getItem("selectedGroup"));
       break;
     case 2:
       selectedgroup = localStorage.getItem("group2ID");
+      localStorage.setItem("currentgroup", selectedgroup);
       localStorage.setItem("selectedGroup", 1);
       console.log(localStorage.getItem("selectedGroup"));
       break;
     case 3:
       selectedgroup = localStorage.getItem("group3ID");
+      localStorage.setItem("currentgroup", selectedgroup);
       localStorage.setItem("selectedGroup", 2);
       console.log(localStorage.getItem("selectedGroup"));
       break;
@@ -468,24 +500,38 @@ function getRunnersNames(runnerid){
       }
     };
     xhr.send();
-    //return runnername;
-  /*for (var key in nowrunners) {
-    xhr.open("GET", "https://infinityrun.azurewebsites.net/api/User/"+nowrunners[key], true);
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          console.log("Data received");
-          var data = JSON.parse(xhr.responseText);
-          //console.log(data);
-          console.log(data);
-          runnernames.push(data.username);
-          console.log(runnernames);
-        } else {
-          console.error("Error retrieving data");
-          document.getElementById("error-message").style.display = "block";
+}
+
+function deleteGroup(checksum){
+  var group;
+  switch (checksum){
+    case 1:
+      group = localStorage.getItem("group1ID");
+      localStorage.setItem("group1ID", null);
+      break;
+    case 2:
+      group = localStorage.getItem("group2ID");
+      localStorage.setItem("group2ID", null);
+      break;
+    case 3:
+      group = localStorage.getItem("group3ID");
+      localStorage.setItem("group3ID", null);
+      break;
+  }
+  xhr.open("DELETE", "https://infinityrun.azurewebsites.net/api/UserGroup/"+group, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          console.log(xhr.status);
+          alert(xhr.responseText);
+          location.reload();
+          /*if (xhr.status === 204) {
+            //alert('Data successfully deleted.');
+            console.log("Data deleted");
+            location.reload();
+          } else {
+            alert('Error deleting data.');
+          }*/
         }
-      }
-    };
-    xhr.send();
-  }*/
+      };
+  xhr.send();
 }

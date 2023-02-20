@@ -33,36 +33,43 @@
       <h1>Groups</h1>
       <table>
         <tr>
-            <th><h2>GROUP</h2></th>
-            <th><h2>ADD GROUP</h2></th>
             <th><h2></h2></th>
-            <th><h2> ADD RUNNER</h2></th>
             <th><h2></h2></th>
-            <th><h2>SELECT GROUP</h2></th>
+            <th><h2></h2></th>
         </tr>
         <tr>
             <th><h2 id="group1">----</h2></th>
-            <th><input type="text" name="groupname" id="groupname1" placeholder="Enter Groupname" required></th>
+            <th></th>
+            <!--<th><input type="text" name="groupname" id="groupname1" placeholder="Enter Groupname" required></th>
             <th><input type="button" value="ADD GROUP" class="btn-group" onclick="sendGroup(1)"></th>
             <th><input type="text" name="groupname" id="runnername1" placeholder="Enter Runner" required></th>
-            <th><input type="button" value="ADD RUNNER" class="btn-group" onclick="addRunner(1)"></th>
+            <th><input type="button" value="ADD RUNNER" class="btn-group" onclick="addRunner(1)"></th>-->
             <th><input type="button" value="SELECT" class="btn-group" onclick="groupSelect(1)"></th>
+            <th><input type="button" value="DELETE" class="btn-delete" onclick="deleteGroup(1)"></th>
         </tr>
         <tr>
             <th><h2 id="group2">----</h2></th>
-            <th><input type="text" name="groupname" id="groupname2" placeholder="Enter Groupname" required></th>
+            <th></th>
+            <!--<th><input type="text" name="groupname" id="groupname2" placeholder="Enter Groupname" required></th>
             <th><input type="button" value="ADD GROUP" class="btn-group" onclick="sendGroup(2)"></th>
             <th><input type="text" name="groupname" id="runnername2" placeholder="Enter Runner" required></th>
-            <th><input type="button" value="ADD RUNNER" class="btn-group" onclick="addRunner(2)"></th>
+            <th><input type="button" value="ADD RUNNER" class="btn-group" onclick="addRunner(2)"></th>-->
             <th><input type="button" value="SELECT" class="btn-group" onclick="groupSelect(2)"></th>
+            <th><input type="button" value="DELETE" class="btn-delete" onclick="deleteGroup(2)"></th>
         </tr>
         <tr>
             <th><h2 id="group3">----</h2></th>
-            <th><input type="text" name="groupname" id="groupname3" placeholder="Enter Groupname" required></th>
+            <th></th>
+            <!--<th><input type="text" name="groupname" id="groupname3" placeholder="Enter Groupname" required></th>
             <th><input type="button" value="ADD GROUP" class="btn-group" onclick="sendGroup(3)"></th>
             <th><input type="text" name="groupname" id="runnername3" placeholder="Enter Runner" required></th>
-            <th><input type="button" value="ADD RUNNER" class="btn-group" onclick="addRunner(3)"></th>
+            <th><input type="button" value="ADD RUNNER" class="btn-group" onclick="addRunner(3)"></th>-->
             <th><input type="button" value="SELECT" class="btn-group" onclick="groupSelect(3)"></th>
+            <th><input type="button" value="DELETE" class="btn-delete" onclick="deleteGroup(3)"></th>
+        </tr>
+        <tr>
+          <th colspan="2"><input type="text" name="groupname" id="groupname" placeholder="Enter Groupname" required></th>
+          <th colspan="2"><input type="button" value="ADD GROUP" class="btn-group" onclick="sendGroup()"></th>
         </tr>
       </table>
       <!--<form method="post">-->

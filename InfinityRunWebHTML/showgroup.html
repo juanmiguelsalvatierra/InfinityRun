@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <title>Infinity Run | Groups</title>
+    <title>Infinity Run | Selected group</title>
     <link rel="stylesheet" type="text/css" href="showgroups.css" />
     <script src="main.js"></script>
   </head>
@@ -34,7 +34,10 @@
         <div id ="runners">
             <h2>Runners</h2>
             <p id ="showrunner">----</p>
+            <input type="text" name="groupname" id="runnernew" placeholder="Enter Runner" required>
+            <input type="button" value="ADD RUNNER" class="btn-group" onclick="addRunner()">
             <input type="button" value="SELECT" class="btn-group" onclick="goMain()">
+            <a href="allgroups.html">Return</a>
         </div>
     </div>
   </body>

@@ -125,6 +125,14 @@ h1 {
     border-color:aquamarine;
 }
 
+.btn-delete{
+  width: 100%;
+  height: 40px;
+  background-color:red;
+  border-radius: 10px;
+  border-color:red;
+}
+
 .groupname{
     height: 40px;
     border-radius: 10px; 
@@ -134,7 +142,11 @@ h2 {
     color: white;
 }
 
-#groupname1, #groupname2, #groupname3, #runnername1, #runnername2, #runnername3 {
+#groupname {
   height: 40px;
   border-radius: 10px;
 }
+
+/*table, tr, th {
+  border: 1px solid black;
+}*/
