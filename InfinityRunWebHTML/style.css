@@ -109,7 +109,8 @@ header {
 #btn{
   margin-left: 2%;
   margin-top: 20px;
-  width: 95%;
+  min-width: 100px;
+  max-width: 200px;
   height: 40px;
   background-color:aquamarine;
   border-radius: 10px;
@@ -134,6 +135,24 @@ h1 {
   margin-top: 0%;
   align-items: center;
   width: 30%;
+  height: 300px;
+  overflow-y: auto;
+}
+
+#buttontable {
+  position: absolute;
+  left: 65%;
+  top: 70%;
+  right: 25%;
+  color: #FFFFFF;
+  font-family: century gothic;
+  margin-top: 0%;
+  align-items: center;
+  width: 40%;
+}
+
+#buttont {
+  width: 80%;
 }
 
 /*table, th, tr {
