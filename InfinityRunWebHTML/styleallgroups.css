@@ -128,9 +128,9 @@ h1 {
 .btn-delete{
   width: 100%;
   height: 40px;
-  background-color:red;
+  background-color:#E84032;
   border-radius: 10px;
-  border-color:red;
+  border-color:#E84032;
 }
 
 .groupname{
