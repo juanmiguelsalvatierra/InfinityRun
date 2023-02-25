@@ -48,8 +48,15 @@
           <th></th>
           <th class="data"><h3 id="hr">LOADING...</h3></th>
         </tr>
-        <tr>
-          <th id ="example" colspan = "4"><input type="button" value="SEND ROUTE" id="btn" onclick="sendRoute ()"></th>
+        
+      </table>
+    </div>
+    <div id="buttontable">
+      <table id="buttont">
+        <tr>  
+          <th><input type="button" value="SEND ROUTE" id="btn" onclick="sendRoute ()"></th>
+          <th><input type="button" value="UNDO" id="btn" onclick="initMap().deleteLastMarker()"></th>
+          <th><input type="button" value="END RUN" id="btn" onclick="endRun()"></th>
         </tr>
       </table>
     </div>
