@@ -11,7 +11,9 @@ var coachname;
 var groupArray = [];
 let selectedGroup;
 let currentrunners = [];
+var polylines = [];
 var uid = "63970f9bd83230a9af442016";
+var userHashMap = {};
 
 function logout(){
   localStorage.setItem("userid", null);
@@ -48,7 +50,7 @@ function initMap() {
     drawPolyline();
   });
 
-
+}
   //map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
 
   let lastmarker;
@@ -56,7 +58,7 @@ function initMap() {
     let marker = new google.maps.Marker({
         map: map,
         position: latLng,
-        draggable: true
+        draggable: false
     });
 
 
@@ -69,8 +71,8 @@ function initMap() {
     route.push([lat, lng]);
     //sendRoute();
     lastmarker = marker;
-    console.log(markersArray);
-    console.log(route);
+    //console.log(markersArray);
+    //console.log(route);
   }
 
   function drawPolyline() {
@@ -79,15 +81,44 @@ function initMap() {
     markersArray.forEach(function(e) {
       markersPositionArray.push(e.getPosition());
     });
-
+    //console.log(markersPositionArray);
     // Polyline wird gezeichnet
     polyline = new google.maps.Polyline({
       map: map,
       path: markersPositionArray,
       strokeOpacity: 1
     });
+
+    polylines.push(polyline);
   }
+
+
+function deleteLastMarker() {
+  let markersPositionArray = [];
+  // get last marker in array
+  var lastMarker = markersArray.pop();
+  route.pop();
+
+  // remove marker from map
+  lastMarker.setMap(null);
+
+  // update polyline
+  updatePolyline();
+  //console.log(route);
+
 }
+
+function updatePolyline() {
+  // get array of marker positions
+  var path = markersArray.map(function(marker) { return marker.getPosition() });
+  console.log(path);
+
+  // update polyline with new path
+  polylines.forEach(function(polyline) {
+    polyline.setPath(path);
+  });
+}
+
 
 var xhr = new XMLHttpRequest();
 
@@ -111,22 +142,34 @@ function sendRoute(){
   xhr.open('POST', 'https://infinityrun.azurewebsites.net/api/Route/', true);
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(jsonString);
+  alert("Route wurde geschickt");
 }
 
 //xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/User/63970f9bd83230a9af442016', true);
-xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/User/63da36d9d33d8be0b81cafe4', true);
 
-xhr.send();
+
+
+
+
+
+/*xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/User/63da36d9d33d8be0b81cafe4', true);
 xhr.onreadystatechange = function() {
+  console.log(xhr.responseText);
     if (xhr.readyState === 4 && xhr.status === 200) {
         var data = JSON.parse(xhr.responseText);
         document.getElementById('username').innerHTML = data.username;
     }
 }
+xhr.send();
 
 xhr.onerror = function() {
     console.log("Error", xhr.statusText);
-}
+}*/
+
+
+
+
+
 
 /*let marker = new google.maps.Marker({
   map: map,            
@@ -136,26 +179,10 @@ xhr.onerror = function() {
 });*/
 let marker;
 function go(){
+  
+  
   var selectedgroup = localStorage.getItem("selectedGroup");
   var userid = localStorage.getItem("userid");
-  /*xhr.open("GET", "https://infinityrun.azurewebsites.net/api/UserGroup/"+userid+"&1", true);
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === XMLHttpRequest.DONE) {
-      if (xhr.status === 200) {
-        console.log("Data received");
-        var data = JSON.parse(xhr.responseText);
-        //console.log(data);
-        //document.getElementById('selectedgroupname').innerHTML = data[selectedgroup].name;
-        //document.getElementById('showrunner').innerHTML = data[selectedgroup].runners;
-        currentrunners = data[selectedgroup].runners;
-        console.log(currentrunners);
-      } else {
-        console.error("Error retrieving data");
-        document.getElementById("error-message").style.display = "block";
-      }
-    }
-  };
-  xhr.send();*/
 
   var username = localStorage.getItem("username");
   document.getElementById("dropdown-btn").innerHTML = username;
@@ -194,74 +221,49 @@ function go(){
     cell1.setAttribute("id", "speed"+i);
     cell3.setAttribute("id", "hr"+i);
   }
-  /*xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/User/'+parsedArray[i], false);
-    xhr.send();
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        var data = JSON.parse(xhr.responseText);
-        document.getElementById('username'+i).innerHTML = data.username;
-        console.log(data.username);
-      }
-    }*/
-  //getUserData(parsedArray[0], 0);
   for (var i = 0; i < parsedArray.length; i++) {
     //console.log(i);
     //console.log(parsedArray[i]);
     getUserData(parsedArray[i], i);
-
-
-    /*xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/User/'+parsedArray[i], false);
-    xhr.send();
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          var data = JSON.parse(xhr.responseText);
-          document.getElementById('username'+i).innerHTML = data.username;
-          console.log(data.username);
-          document.getElementById('speed').innerHTML = data.speed;
-          var o = new google.maps.LatLng(data.location[0], data.location[1]);
-          marker = new google.maps.Marker({
-            map: map,            
-            position: o,
-            draggable: true,
-            icon: 'images/runner.png'
-          });
-        }
-    }
-  }*/
-
 }
-var intervallist = [];
-for (var i = 0; i < parsedArray.length; i++) {
-  console.log(parsedArray[i]);
-  intervallist.add()
-  setInterval(() => {
-    //marker.remove();
-    //xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/UserData/63970f9bd83230a9af442016', true);
-    xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/UserData/'+parsedArray[i], false); 
-    console.log(parsedArray[i]);
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          var data = JSON.parse(xhr.responseText);
-          document.getElementById('hr'+i).innerHTML = data.heartRate;
-          document.getElementById('speed'+i).innerHTML = data.speed;
-          var o = new google.maps.LatLng(data.location[0], data.location[1]);
-          marker = new google.maps.Marker({
-            map: map,            
-            position: o,
-            draggable: true,
-            icon: 'images/runner.png'
-          });
-        }
-    }
-    xhr.send();
-    xhr.onerror = function() {
-        console.log("Error", xhr.statusText);
-    }
-  }, 1000);
 
-  setInterval(() =>{
-  marker.setMap(null);
-  }, 1000);
+for (const key in parsedArray) {
+  showUserData(parsedArray[key], key);
+}
+/*
+for (var i = 0; i < parsedArray.length; i++) {
+console.log(i)
+console.log(parsedArray[i]);
+setInterval(() => {
+  //marker.remove();
+  //xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/UserData/63970f9bd83230a9af442016', true);
+  xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/UserData/'+parsedArray[i], true);
+  xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var data = JSON.parse(xhr.responseText);
+        document.getElementById('hr'+i).innerHTML = data.heartRate;
+        document.getElementById('speed'+i).innerHTML = data.speed;
+        var o = new google.maps.LatLng(data.location[0], data.location[1]);
+        marker = new google.maps.Marker({
+          map: map,            
+          position: o,
+          draggable: true,
+          icon: 'images/runner.png'
+        });
+        console.log(userHashMap[parsedArray[i]])
+        var infowindow = new google.maps.InfoWindow({
+          content: userHashMap[parsedArray[i]]
+        });
+      
+        // add an event listener to the marker to open the info window when clicked
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+      }
+  }
+  xhr.send();
+}, 1000);
+
 }
   //Daten werden alle 2 Sekunden aktualisiert
   /*setInterval(() => {
@@ -270,6 +272,7 @@ for (var i = 0; i < parsedArray.length; i++) {
     xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/UserData/63da36d9d33d8be0b81cafe4', false);
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
+          console.log(xhr.status);
           var data = JSON.parse(xhr.responseText);
           document.getElementById('hr').innerHTML = data.heartRate;
           document.getElementById('speed').innerHTML = data.speed;
@@ -290,7 +293,7 @@ for (var i = 0; i < parsedArray.length; i++) {
 
   setInterval(() =>{
   marker.setMap(null);
-  }, 1000);*/ 
+  }, 1000);*/
 
 
 
@@ -305,11 +308,47 @@ function getUserData(id, index) {
   xhr.onreadystatechange = function() { 
     if (xhr.readyState === 4 && xhr.status === 200) {
       var data = JSON.parse(xhr.responseText);
+      var username = data.username;
+      userHashMap[id] = username;
       document.getElementById('username'+index).innerHTML = data.username;
-      console.log(data.username);
     }
   }
   xhr.send();
+}
+
+function showUserData(user, i){
+  setInterval(() => {
+    //marker.remove();
+    //xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/UserData/63970f9bd83230a9af442016', true);
+    xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/UserData/'+user, false);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var data = JSON.parse(xhr.responseText);
+          document.getElementById('hr'+i).innerHTML = data.heartRate;
+          document.getElementById('speed'+i).innerHTML = data.speed;
+          var o = new google.maps.LatLng(data.location[0], data.location[1]);
+          marker = new google.maps.Marker({
+            map: map,            
+            position: o,
+            draggable: true,
+            icon: 'images/runner.png'
+          });
+          var infowindow = new google.maps.InfoWindow({
+            content: userHashMap[user]
+          });
+        
+          // add an event listener to the marker to open the info window when clicked
+          marker.addListener('click', function() {
+            infowindow.open(map, marker);
+          });
+        }
+    }
+    xhr.send();
+  }, 1000);
+
+  /*setInterval(() =>{
+    marker.setMap(null);
+  }, 1000);*/
 }
 
 

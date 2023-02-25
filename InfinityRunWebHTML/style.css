@@ -127,7 +127,7 @@ h1 {
 
 #userdata {
   position: absolute;
-  left: 65%;
+  left: 70%;
   top: 25%;
   right: 25%;
   color: #FFFFFF;
@@ -137,6 +137,12 @@ h1 {
   width: 30%;
   height: 300px;
   overflow-y: auto;
+}
+
+#usertable{
+  font-family: century gothic;
+  text-align: center;
+  font-size: x-large;
 }
 
 #buttontable {
@@ -172,7 +178,7 @@ h3 {
 
 
 
-
+/*
 input[type=text], input[type=password] {
   width: 100%;
   padding: 12px 20px;
@@ -221,7 +227,6 @@ span.psw {
   padding-top: 16px;
 }
 
-/* Change styles for span and cancel button on extra small screens */
 @media screen and (max-width: 300px) {
   span.psw {
      display: block;
