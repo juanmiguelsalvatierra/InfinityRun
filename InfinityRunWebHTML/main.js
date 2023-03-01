@@ -42,6 +42,7 @@ function initMap() {
     center: { lat: 48.22176299638565, lng: 16.445311903684694 },
     zoom: 17,
     disableDefaultUI: true,
+    zoomControl: true,
   });
 
   map.addListener('click', function(e) {
@@ -317,6 +318,7 @@ function getUserData(id, index) {
 }
 
 function showUserData(user, i){
+  var marker = null;
   setInterval(() => {
     //marker.remove();
     //xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/UserData/63970f9bd83230a9af442016', true);
@@ -327,6 +329,28 @@ function showUserData(user, i){
           document.getElementById('hr'+i).innerHTML = data.heartRate;
           document.getElementById('speed'+i).innerHTML = data.speed;
           var o = new google.maps.LatLng(data.location[0], data.location[1]);
+          if (!marker) {
+            // create new marker if it doesn't exist yet
+            marker = new google.maps.Marker({
+              map: map,            
+              position: o,
+              draggable: true,
+              icon: 'images/runner.png'
+            });
+            const infowindow = new google.maps.InfoWindow({
+              content: userHashMap[user]
+            });
+            // add an event listener to the marker to open the info window when clicked
+            marker.addListener('click', function() {
+              infowindow.open(map, marker);
+            });
+            infowindow.open(map, marker);
+          } else {
+            // update marker position if it already exists
+            marker.setPosition(o);
+          }
+          
+          /*
           marker = new google.maps.Marker({
             map: map,            
             position: o,
@@ -340,11 +364,12 @@ function showUserData(user, i){
           // add an event listener to the marker to open the info window when clicked
           marker.addListener('click', function() {
             infowindow.open(map, marker);
-          });
+          });*/
         }
     }
     xhr.send();
-  }, 1000);
+    //marker.setMap(null);
+  }, 2000);
 
   /*setInterval(() =>{
     marker.setMap(null);
@@ -411,13 +436,26 @@ async function login() {
 
 
 async function hashString(data) {
-  const encoder = new TextEncoder();
+  /*const encoder = new TextEncoder();
   const dataArray = encoder.encode(data);
   const hashBuffer = await window.crypto.subtle.digest('SHA-256', dataArray);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   console.log(hashHex);
-  return hashHex;
+  return hashHex;*/
+
+  try {
+    const encoder = new TextEncoder();
+    const dataArray = encoder.encode(data);
+    const hashBuffer = await window.crypto.subtle.digest('SHA-256', dataArray);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    console.log(hashHex);
+    return hashHex;
+  } catch (error) {
+    console.error(error);
+    return null; // or throw a custom error message
+  }
 } 
 
 function getGroup(){
