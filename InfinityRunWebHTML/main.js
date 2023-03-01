@@ -230,41 +230,6 @@ function go(){
 for (const key in parsedArray) {
   showUserData(parsedArray[key], key);
 }
-/*
-for (var i = 0; i < parsedArray.length; i++) {
-console.log(i)
-console.log(parsedArray[i]);
-setInterval(() => {
-  //marker.remove();
-  //xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/UserData/63970f9bd83230a9af442016', true);
-  xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/UserData/'+parsedArray[i], true);
-  xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        var data = JSON.parse(xhr.responseText);
-        document.getElementById('hr'+i).innerHTML = data.heartRate;
-        document.getElementById('speed'+i).innerHTML = data.speed;
-        var o = new google.maps.LatLng(data.location[0], data.location[1]);
-        marker = new google.maps.Marker({
-          map: map,            
-          position: o,
-          draggable: true,
-          icon: 'images/runner.png'
-        });
-        console.log(userHashMap[parsedArray[i]])
-        var infowindow = new google.maps.InfoWindow({
-          content: userHashMap[parsedArray[i]]
-        });
-      
-        // add an event listener to the marker to open the info window when clicked
-        marker.addListener('click', function() {
-          infowindow.open(map, marker);
-        });
-      }
-  }
-  xhr.send();
-}, 1000);
-
-}
   //Daten werden alle 2 Sekunden aktualisiert
   /*setInterval(() => {
     //marker.remove();
