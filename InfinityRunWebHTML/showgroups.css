@@ -120,6 +120,7 @@ body {
 .btn-group{
     display: block;
     margin: 0 auto;
+    margin-top: 20px; 
     width: 50%;
     height: 40px;
     background-color:aquamarine;
@@ -143,6 +144,10 @@ a {
   margin: auto;
   color: red;
   text-align: center;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 #runnernew {
