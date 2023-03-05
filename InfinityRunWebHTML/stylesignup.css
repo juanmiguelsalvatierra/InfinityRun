@@ -1,11 +1,11 @@
 body {
     /*background-image: linear-gradient(#FFFFFF, #83CCF6, #375adb);*/
     height: 100vh;
-    /*background-color: #353c47;*/
+    background-color: #353c47;
     font-family: Tahoma;
     overflow: hidden;
-    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-    /*background: linear-gradient(#454e5f,#B6EAEB);*/
+    /*background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background: linear-gradient(#454e5f,#B6EAEB);*/
     animation: gradient 10s ease infinite;
     background-size: 400% 400%;
 }

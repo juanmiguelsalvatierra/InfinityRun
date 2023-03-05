@@ -12,10 +12,11 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);*/
     margin: auto;
+    margin-top: 2%;
     padding: 10px;
     background-color: #454e5c;
-    height: 70%;
-    width: 90%;
+    height: 60%;
+    width: 70%;
     border-radius: 20px;
 }
 
