@@ -23,6 +23,12 @@ body {
     height: 340px;
     width: 400px;
     border-radius: 20px;
+    animation: mymove 1s;
+}
+
+@keyframes mymove {
+    from {top: 40%; opacity: 1%; height: 100px;}
+    to {top: 50%; opacity: 100%; height: 340px;}
 }
 
 h1 {
