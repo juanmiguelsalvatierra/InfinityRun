@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <title>Infinity Run | Groups</title>
+    <link rel="stylesheet" type="text/css" href="styleallgroups.css" />
+    <script src="main.js"></script>
+  </head>
+  <body onload="getGroup()">
+    <header>
+        <img class="logo" src="images/logoblack.png" alt="logo">
+        <nav>
+          <ul class = "nav_links">
+            <li><a href="main.html">HOME</a></li>
+            <li><a href="#">GROUPS</a></li>
+            <li><a href="#">SETTINGS</a></li>
+            <li>
+              <div class="dropdown">
+                <button id="dropdown-btn">PROFILE</button>
+                <div class="dropdown-content">
+                  <a href="#">SETTINGS</a>
+                  <a href="login.html" style="color: #f55656" onclick="logout()">LOGOUT</a>
+                </div>
+              </div>
+          </li>
+          </ul>
+        </nav>
+    </header>
+    <!--<img class="logo" src="images/logoblack.png" alt="logo">-->
+    <div class="center">
+      <h1>Groups</h1>
+      <table>
+        <tr>
+            <th><h2></h2></th>
+            <th><h2></h2></th>
+            <th><h2></h2></th>
+        </tr>
+        <tr>
+            <th><h2 id="group1">----</h2></th>
+            <th></th>
+            <!--<th><input type="text" name="groupname" id="groupname1" placeholder="Enter Groupname" required></th>
+            <th><input type="button" value="ADD GROUP" class="btn-group" onclick="sendGroup(1)"></th>
+            <th><input type="text" name="groupname" id="runnername1" placeholder="Enter Runner" required></th>
+            <th><input type="button" value="ADD RUNNER" class="btn-group" onclick="addRunner(1)"></th>-->
+            <th><input type="button" value="SELECT" class="btn-group" onclick="groupSelect(1)"></th>
+            <th><input type="button" value="DELETE" class="btn-delete" onclick="deleteGroup(1)"></th>
+        </tr>
+        <tr>
+            <th><h2 id="group2">----</h2></th>
+            <th></th>
+            <!--<th><input type="text" name="groupname" id="groupname2" placeholder="Enter Groupname" required></th>
+            <th><input type="button" value="ADD GROUP" class="btn-group" onclick="sendGroup(2)"></th>
+            <th><input type="text" name="groupname" id="runnername2" placeholder="Enter Runner" required></th>
+            <th><input type="button" value="ADD RUNNER" class="btn-group" onclick="addRunner(2)"></th>-->
+            <th><input type="button" value="SELECT" class="btn-group" onclick="groupSelect(2)"></th>
+            <th><input type="button" value="DELETE" class="btn-delete" onclick="deleteGroup(2)"></th>
+        </tr>
+        <tr>
+            <th><h2 id="group3">----</h2></th>
+            <th></th>
+            <!--<th><input type="text" name="groupname" id="groupname3" placeholder="Enter Groupname" required></th>
+            <th><input type="button" value="ADD GROUP" class="btn-group" onclick="sendGroup(3)"></th>
+            <th><input type="text" name="groupname" id="runnername3" placeholder="Enter Runner" required></th>
+            <th><input type="button" value="ADD RUNNER" class="btn-group" onclick="addRunner(3)"></th>-->
+            <th><input type="button" value="SELECT" class="btn-group" onclick="groupSelect(3)"></th>
+            <th><input type="button" value="DELETE" class="btn-delete" onclick="deleteGroup(3)"></th>
+        </tr>
+        <tr>
+          <th colspan="2"><input type="text" name="groupname" id="groupname" placeholder="Enter Groupname" required></th>
+          <th colspan="2"><input type="button" value="ADD GROUP" class="btn-group" onclick="sendGroup()"></th>
+        </tr>
+      </table>
+      <!--<form method="post">-->
+    </div>
+  </body>
+</html>

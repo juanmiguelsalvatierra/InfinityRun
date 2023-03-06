@@ -23,12 +23,6 @@ body {
     height: 340px;
     width: 400px;
     border-radius: 20px;
-    animation: mymove 1s;
-}
-
-@keyframes mymove {
-    from {top: 40%; opacity: 1%; height: 100px;}
-    to {top: 50%; opacity: 100%; height: 340px;}
 }
 
 h1 {
@@ -42,20 +36,33 @@ h1 {
 
 .txt_field input {
     width: 90%;
-    height: 20px;
+    height: 30px;
     margin-left: 3%;
-    margin-top: 30px;
+    margin-top: 40px;
     border-radius: 10px;
 }
 
-#btn{
-    margin-left: 2%;
-    margin-top: 10px;
-    width: 95%;
+#btn-group{
+    margin-top: 40px;
+    width: 150px;
     height: 40px;
     background-color:aquamarine;
-    border-radius: 100px;
+    border-radius: 10px;
     border-color:aquamarine;
+}
+
+#btn-runner{
+    margin-top: 40px;
+    width: 150px;
+    height: 40px;
+    background-color:aquamarine;
+    border-radius: 10px;
+    border-color:aquamarine;
+}
+
+#buttons{
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #error-message{

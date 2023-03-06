@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <title>Infinity Run | Selected group</title>
+    <link rel="stylesheet" type="text/css" href="showgroups.css" />
+    <script src="main.js"></script>
+  </head>
+  <body onload="getSelectedGroup()">
+    <header>
+        <img class="logo" src="images/logoblack.png" alt="logo">
+        <nav>
+          <ul class = "nav_links">
+            <li><a href="main.html">HOME</a></li>
+            <li><a href="#">GROUPS</a></li>
+            <li><a href="#">SETTINGS</a></li>
+            <li>
+              <div class="dropdown">
+                <button id="dropdown-btn">PROFILE</button>
+                <div class="dropdown-content">
+                  <a href="#">SETTINGS</a>
+                  <a href="login.html" style="color: red" onclick="logout()">LOGOUT</a>
+                </div>
+              </div>
+          </li>
+          </ul>
+        </nav>
+    </header>
+    <!--<img class="logo" src="images/logoblack.png" alt="logo">-->
+    <div class="center">
+        <h1 id="selectedgroupname">-----</h1>
+        <div id ="runners">
+            <h2>Runners</h2>
+            <p id ="showrunner">----</p>
+            <input type="text" name="groupname" id="runnernew" placeholder="Enter Runner" required>
+            <input type="button" value="ADD RUNNER" class="btn-group" onclick="addRunner()">
+            <input type="button" value="SELECT" class="btn-group" onclick="goMain()">
+            <a href="allgroups.html">RETURN</a>
+        </div>
+    </div>
+  </body>
+</html>

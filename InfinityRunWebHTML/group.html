@@ -4,27 +4,32 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <title>Infinity Run | Login</title>
-    <link rel="stylesheet" type="text/css" href="stylelogin.css" />
+    <title>Infinity Run | Groups</title>
+    <link rel="stylesheet" type="text/css" href="stylegroup.css" />
     <script src="main.js"></script>
   </head>
-  <body onload="loadlogin()">
+  <body onload="getGroup()">
     <h1>Infinity Run</h1>
     <!--<img class="logo" src="images/logoblack.png" alt="logo">-->
     <div class="center">
-      <h1>Login</h1>
+      <h1>Groups</h1>
       <form method="post">
-        <div class="txt_field">
-          <input type="text" name="username" id="username" placeholder="Username" required>
+        <div>
+          <a href="" id="gname"></a>
         </div>
         <div class="txt_field">
-          <input type="password" name="password" id="password" placeholder="Password" required>
+          <input type="text" name="groupname" id="groupname" placeholder="Enter Groupname" required>
         </div>
-        <p class="signup">Don't have an account? <a href="index.html">Sign Up</a></p>
         <!--<a href="index.html">
           <button type="submit" onclick="login()">LOGIN</button>
         </a>-->
-        <input type="button" value="LOGIN" id="btn" onclick="login()">
+        <table id="buttons">
+          <tr>
+            <th><input type="button" value="Add Group" id="btn-group" onclick="sendGroup()"></th>
+            <th><input type="button" value="Add Runner" id="btn-runner" onclick="addRunner()"></th>
+          </tr>
+        </table>
+        <!--<input type="button" value="Add Group" id="btn" onclick="sendGroup()">-->
       </form>
       <div id="error-message" style="display:none;">
         Login failed. Please try again.

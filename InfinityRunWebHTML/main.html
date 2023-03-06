@@ -15,15 +15,14 @@
         <!--<h1>Infinity Run</h1>-->
         <ul class = "nav_links">
           <li><a href="#">HOME</a></li>
-          <li><a href="#">GROUPS</a></li>
+          <li><a href="allgroups.html">GROUPS</a></li>
           <li><a href="#">SETTINGS</a></li>
           <li>
             <div class="dropdown">
               <button id="dropdown-btn">PROFILE</button>
               <div class="dropdown-content">
-                <a href="#">Link 1</a>
-                <a href="#">Link 2</a>
-                <a href="login.html" style="color: red">LOGOUT</a>
+                <a href="#">SETTINGS</a>
+                <a href="#" style="color: red" onclick="logout()">LOGOUT</a>
               </div>
             </div>
         </li>
@@ -34,44 +33,31 @@
     </header>
     <div id="userdata">
       <table id="usertable">
-        <tr>
+        <!--<tr>
           <th style="width: 40%"></th>
           <th><h2 id="username">LOADING...</h2></th>
           <th style="width: 40%"></th>
         </tr>
         <tr>
-          <!--<th class="data"><h3>TIME</h3></th>
-          <th></th>
-          <th class="data"><h3>HEARTRATE</h3></th>-->
-
           <th class="data"><h3>SPEED</h3></th>
           <th></th>
           <th class="data"><h3>HEARTRATE</h3></th>
         </tr>
         <tr>
-          <!--<th class="data"><h3>5:34</h3></th>
-          <th></th>
-          <th class="data"><h3 id="hr">LOADING...</h3></th>-->
-
           <th class="data"><h3 id="speed">LOADING...</h3></th>
           <th></th>
           <th class="data"><h3 id="hr">LOADING...</h3></th>
-        </tr>
-        <tr>
-          <!--<th class="data"><h3>DISTANCE</h3></th>
-          <th></th>
-          <th class="data"><h3>AVG. SPEED</h3></th>-->
-
-          <th id ="example" colspan = "4"><input type="button" value="Send Route" id="btn" onclick="sendRoute ()"></th>
-        </tr>
-        <!--<tr>
-          <th class="data"><h3>1.2 KM</h3></th>
-          <th></th>
-          <th class="data"><h3 id="speed">LOADING...</h3></th>
-        </tr> 
-        <tr>
-          <th id ="example" colspan = "4"><input type="button" value="Send Route" id="btn" onclick="sendRoute ()"></th>
         </tr>-->
+        
+      </table>
+    </div>
+    <div id="buttontable">
+      <table id="buttont">
+        <tr>  
+          <th><input type="button" value="SEND ROUTE" id="btn" onclick="sendRoute ()"></th>
+          <th><input type="button" value="UNDO" id="btn" onclick="deleteLastMarker()"></th>
+          <th><input type="button" value="END RUN" id="btn" onclick="endRun()"></th>
+        </tr>
       </table>
     </div>
       <div id="map"></div>
@@ -80,7 +66,5 @@
         defer
         ></script>
     </div>
-    <!--<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js">-->
-
     </body>
 </html>
