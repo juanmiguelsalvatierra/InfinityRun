@@ -1,12 +1,14 @@
 package com.example.mobileapp_infinityrun;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -22,11 +24,7 @@ import android.view.View;
 import android.widget.Chronometer;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
-import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
@@ -37,12 +35,8 @@ import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -68,13 +62,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 
 public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback {
@@ -105,7 +95,7 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
     Chronometer chronometer;
     long pauseOffset;
     boolean timeIsRunning, sendToDatabase;
-    float speed1 = 0;
+    float locationSpeed = 0;
     double lat, lng;
     int heartRateForDatabase = 0;
     Handler handlerForDatabase;
@@ -140,7 +130,7 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
             @Override
             public void run() {
                 if (sendToDatabase) {
-                    sendData(speed1, new double[]{lat, lng});
+                    sendData(locationSpeed, new double[]{lat, lng});
                 }
                 handlerForDatabase.postDelayed(this, 1000); // jede Sekunde aufrufen
             }
@@ -235,12 +225,12 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
                 //markerAtCurrrentLocation = map.addMarker(new MarkerOptions().position(currentLocation).title("Current Location"));
                 // Zoom to current location
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
-                speed1 = Math.round(location.getSpeed() * 3.6f);
+                locationSpeed = Math.round(location.getSpeed() * 3.6f * 100) / 100f;
                 lng = location.getLongitude();
                 lat = location.getLatitude();
                 //sendData(speed1, new double[]{location.getLatitude(), location.getLongitude()});
                 //Get speed
-                speed.setText(String.valueOf(speed1) + " km/h");
+                speed.setText(String.valueOf(locationSpeed) + " km/h");
             }
         };
 
@@ -291,25 +281,45 @@ public class Map_Runner extends AppCompatActivity implements OnMapReadyCallback 
 
     public void stopTimer(View v) {
         if (timeIsRunning) {
-            chronometer.stop();
-            pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Timer stoppen");
+            builder.setMessage("Möchten Sie den Timer wirklich stoppen?");
 
-            String url = "https://infinityrun.azurewebsites.net/api/Userdata/" + id;
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
+
+            builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
                 @Override
-                public void onResponse(JSONObject response) {
-                    Log.d("Data sent", "Success");
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("Data sent", "Error: " + error.getMessage());
+                public void onClick(DialogInterface dialog, int which) {
+
+                    chronometer.stop();
+                    pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
+
+                    String url = "https://infinityrun.azurewebsites.net/api/Userdata/" + id;
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d("Data sent", "Success");
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("Data sent", "Error: " + error.getMessage());
+                        }
+                    });
+                    queue.add(jsonObjectRequest);
+                    sendToDatabase = false;
                 }
             });
-            queue.add(jsonObjectRequest);
-            sendToDatabase = false;
+            builder.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // do nothing, just dismiss the dialog
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
     }
+
 
     private BitmapDescriptor bitmapDescriptor(Context context, int vectorResId) {
         Drawable drawable = ContextCompat.getDrawable(context, vectorResId);

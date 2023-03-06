@@ -87,8 +87,10 @@ public class SignUp extends AppCompatActivity {
                 //    Toast.makeText(SignUp.this, "There is already an account with this email address", Toast.LENGTH_SHORT).show();
                 else if(email.getText().toString().equals("") && username.getText().toString().equals("") && password1.getText().toString().equals("") && password2.getText().toString().equals(""))
                     Toast.makeText(SignUp.this, "You have to fill in everything", Toast.LENGTH_SHORT).show();
-                else
+                else {
                     Toast.makeText(SignUp.this, "Register not successful", Toast.LENGTH_SHORT).show();
+
+                }
             }
         });
 
@@ -135,7 +137,12 @@ public class SignUp extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("Data sent", "Success");
-                        Toast.makeText(SignUp.this, "Register Successful", Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(SignUp.this, response.getString("errorMessage"), Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                        Log.d("Response", response.toString());
                         Intent intent = new Intent(SignUp.this, LogInActivity.class);
                         startActivity(intent);
                     }
