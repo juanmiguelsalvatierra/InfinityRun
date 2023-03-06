@@ -17,6 +17,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -70,6 +71,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
     List<Marker> markerList = new ArrayList<>();
     TextView username;
     private RequestQueue queue;
+    Handler handlerForDatabase;
+    Runnable runnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +99,16 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
         turnOnLocation();
         // Get the route from the database
         //getRouteFromDatabase();
+
+        handlerForDatabase = new Handler();
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                getRouteFromDatabase();
+                handlerForDatabase.postDelayed(this, 1000); // jede Sekunde aufrufen
+            }
+        };
+        handlerForDatabase.postDelayed(runnable, 1000);
 
         //Bundle bundle = getIntent().getExtras();
         //placeList = (List<MarkerOptions>) bundle.getSerializable("placeList");
@@ -143,8 +156,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
         //getRouteFromDatabase();
 
 
-            // Connect places
-
+            // Connect places-
+        /*
         placeList.add(new MarkerOptions().position(new LatLng(48.22153, 16.44409)).title("Place 1")
                 .icon(bitmapDescriptor(getApplicationContext(), R.drawable.ic_baseline_circle_24)));
         placeList.add(new MarkerOptions().position(new LatLng(48.22108, 16.44649)).title("Place 2")
@@ -153,7 +166,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
                 .icon(bitmapDescriptor(getApplicationContext(), R.drawable.ic_baseline_circle_24)));
         placeList.add(new MarkerOptions().position(new LatLng(48.22048, 16.44386)).title("Place 4")
                 .icon(bitmapDescriptor(getApplicationContext(), R.drawable.ic_baseline_circle_24)));
-
+        */
 
         // Check if the placeList is empty
         if(placeList.isEmpty()) return;
@@ -188,7 +201,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
 
     private void getRouteFromDatabase() {
         // Get the route from the database
-        String url = "https://infinityrun.azurewebsites.net/api/Route/639158b08b3660204207cacb?coach=false";// + id +"?coach=false";
+        String url = "https://infinityrun.azurewebsites.net/api/Route/" + id + "?coach=false";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
@@ -217,14 +230,14 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback{
 
 
                         } catch (JSONException e) {
-                            Toast.makeText(Map.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(Map.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(Map.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(Map.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
                 });
