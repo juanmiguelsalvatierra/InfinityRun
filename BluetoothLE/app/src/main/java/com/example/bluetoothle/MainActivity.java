@@ -11,6 +11,7 @@ import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
+import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -33,6 +34,10 @@ public class MainActivity extends AppCompatActivity {
     int permissionRequestCode;
 
     private BluetoothLeScanner bluetoothLeScanner;
+    private BluetoothManager bluetoothManager;
+    private BluetoothAdapter bluetoothAdapter;
+    private final static int REQUEST_ENABLE_BT = 1;
+    private final static int SCAN_PERIOD = 7000;
     private boolean scanning;
     private Handler handler = new Handler();
     private static final String TAG = "MainActivityA";
@@ -54,23 +59,16 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (mBluetoothAdapter == null) {
-            // Device does not support Bluetooth
-        }
-        if (!mBluetoothAdapter.isEnabled()) {
+        bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        bluetoothAdapter = bluetoothManager.getAdapter();
+
+        //ensure bluetooth is enabled
+        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return;
             }
-            startActivityForResult(enableBtIntent, 1); // requestCode muss größer oder gleich 0 sein
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         } else {
             scanLeDevice();
         }
@@ -79,13 +77,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         if (requestCode == permissionRequestCode && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             scanLeDevice();
         }
     }
 
-    // Nach Geräten suchen
     private void scanLeDevice() {
         Log.d(TAG, "onCreate: ");
         BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -93,47 +89,25 @@ public class MainActivity extends AppCompatActivity {
 
         if (!scanning) {
             // Stops scanning after a predefined scan period.
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    scanning = false;
-                    if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
-                    bluetoothLeScanner.stopScan(leScanCallback);
-                    Log.d(TAG, "Stopped scanning after 10 seconds!");
-                    MainActivity.this.runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(MainActivity.this, "Stopped scanning after 10 seconds!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            handler.postDelayed(() -> {
+                scanning = false;
+                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                    return;
                 }
-            }, 10000); // 10 Sekunden delay
+                bluetoothLeScanner.stopScan(leScanCallback);
+                Log.d(TAG, "Stopped scanning after 10 seconds!");
+                MainActivity.this.runOnUiThread(() -> Toast.makeText(MainActivity.this, "Stopped scanning after 10 seconds!", Toast.LENGTH_SHORT).show());
+            }, SCAN_PERIOD);
 
             scanning = true;
             bluetoothLeScanner.startScan(leScanCallback);
             Log.d(TAG, "Scanning... ");
-            MainActivity.this.runOnUiThread(new Runnable() {
-                public void run() {
-                    Toast.makeText(MainActivity.this, "Scanning...", Toast.LENGTH_SHORT).show();
-                }
-            });
+            MainActivity.this.runOnUiThread(() -> Toast.makeText(MainActivity.this, "Scanning...", Toast.LENGTH_SHORT).show());
         } else {
             scanning = false;
             bluetoothLeScanner.stopScan(leScanCallback);
             Log.d(TAG, "Stopped scanning!");
-            MainActivity.this.runOnUiThread(new Runnable() {
-                public void run() {
-                    Toast.makeText(MainActivity.this, "Stopped scanning!", Toast.LENGTH_SHORT).show();
-                }
-            });
+            MainActivity.this.runOnUiThread(() -> Toast.makeText(MainActivity.this, "Stopped scanning!", Toast.LENGTH_SHORT).show());
         }
     }
 
@@ -141,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             super.onScanResult(callbackType, result);
-
             if (scanning) {
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                     return;
@@ -176,11 +149,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     Log.i(TAG, "CONNECTED");
                     // Connected Status für den User anzeigen
-                    MainActivity.this.runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(MainActivity.this, "Connected to " + myDevice, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    MainActivity.this.runOnUiThread(() -> Toast.makeText(MainActivity.this, "Connected to " + myDevice, Toast.LENGTH_SHORT).show());
                     gatt.discoverServices();
                 } else {
                     if (newState == BluetoothProfile.STATE_DISCONNECTED) {
@@ -188,11 +157,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.i(TAG, "DISCONNECTED");
 
                         // Disconnected Status für den User anzeigen
-                        MainActivity.this.runOnUiThread(new Runnable() {
-                            public void run() {
-                                Toast.makeText(MainActivity.this, "Disconnected from " + myDevice, Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        MainActivity.this.runOnUiThread(() -> Toast.makeText(MainActivity.this, "Disconnected from " + myDevice, Toast.LENGTH_SHORT).show());
                     }
                 }
             }
@@ -213,15 +178,12 @@ public class MainActivity extends AppCompatActivity {
                 }
                 gatt.setCharacteristicNotification(characteristic, true);
 
-
                 final BluetoothGattDescriptor DESCRIPTOR = characteristic.getDescriptor(client_characteristic);
-
                 if (!DESCRIPTOR.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)) {
-                    Log.e(TAG, "    Cannot create descriptor for HR in: ");
+                    Log.e(TAG, "Cannot create descriptor for HR in: ");
                 }
-
                 if (!gatt.writeDescriptor(DESCRIPTOR)) {
-                    Log.e(TAG, "    Cannot enable notifications for HR in: ");
+                    Log.e(TAG, "Cannot enable notifications for HR in: ");
                 }
             }
 
@@ -244,12 +206,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // HR anzeigen
                 TextView hrValue = findViewById(R.id.hrValue);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        hrValue.setText(characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 1) + "");
-                    }
-                });
+                runOnUiThread(() -> hrValue.setText(characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 1) + ""));
 
                 Log.i(TAG, "Heart Rate: " + characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 1));
             }
