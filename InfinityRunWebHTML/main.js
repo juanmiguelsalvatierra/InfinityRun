@@ -567,14 +567,6 @@ function addRunner(){
       console.log(xhr.status);
       alert(xhr.responseText);
       location.reload();
-      /*if (xhr.status === 200) { 
-        //window.location.href = "login.html";
-        console.log("Runner added");
-        alert(xhr.responseText);
-        //location.reload();
-      } else {
-        console.error("Add failed");
-      }*/
     }
   };
   xhr.send(JSON.stringify({}));

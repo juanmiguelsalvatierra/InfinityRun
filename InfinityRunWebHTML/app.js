@@ -54,3 +54,38 @@ async function hashString(data) {
   console.log(hashHex);
   return hashHex;
 }
+
+
+
+
+
+
+const xhr = new XMLHttpRequest();
+
+xhr.open('GET', 'https://infinityrun.azurewebsites.net/api/User/');
+
+xhr.onload = function() {
+  if (xhr.status === 200) {
+    const response = JSON.parse(xhr.responseText);
+    console.log(response);
+  } else {
+    console.log(xhr.status);
+  }
+};
+
+xhr.send();
+
+
+
+
+
+
+
+
+axios.get('https://infinityrun.azurewebsites.net/api/User/')
+  .then(function (response) {
+    console.log(response.data);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
