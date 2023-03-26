@@ -40,6 +40,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -100,7 +102,25 @@ public class LogInActivity extends AppCompatActivity {
 
 
     private void checkCredentials() {
-        String url = "https://infinityrun.azurewebsites.net/api/User/" + username.getText().toString() + "&" + password.getText().toString();
+        // Hash password
+        String tmpPassword = password.getText().toString();
+        String hashedPassword = "";
+
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(tmpPassword.getBytes());
+            byte[] digest = md.digest();
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : digest) {
+                hexString.append(String.format("%02x", b));
+            }
+            hashedPassword = hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+
+        String url = "https://infinityrun.azurewebsites.net/api/User/" + username.getText().toString() + "&" + hashedPassword;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 

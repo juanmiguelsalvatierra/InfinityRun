@@ -24,6 +24,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 public class SignUp extends AppCompatActivity {
@@ -85,8 +87,10 @@ public class SignUp extends AppCompatActivity {
                 //    Toast.makeText(SignUp.this, "There is already an account with this email address", Toast.LENGTH_SHORT).show();
                 else if(email.getText().toString().equals("") && username.getText().toString().equals("") && password1.getText().toString().equals("") && password2.getText().toString().equals(""))
                     Toast.makeText(SignUp.this, "You have to fill in everything", Toast.LENGTH_SHORT).show();
-                else
+                else {
                     Toast.makeText(SignUp.this, "Register not successful", Toast.LENGTH_SHORT).show();
+
+                }
             }
         });
 
@@ -101,12 +105,27 @@ public class SignUp extends AppCompatActivity {
     }
 
     private void sendData() {
+        String password = password1.getText().toString();
+        String hashedPassword = "";
+
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(password.getBytes());
+            byte[] digest = md.digest();
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : digest) {
+                hexString.append(String.format("%02x", b));
+            }
+            hashedPassword = hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
 
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("username", username.getText().toString());
             jsonObject.put("mail", email.getText().toString());
-            jsonObject.put("password", password1.getText().toString());
+            jsonObject.put("password", hashedPassword);
 
         } catch (JSONException e) {
             Log.e("JSON Error", e.getMessage());
@@ -118,7 +137,12 @@ public class SignUp extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("Data sent", "Success");
-                        Toast.makeText(SignUp.this, "Register Successful", Toast.LENGTH_SHORT).show();
+                        try {
+                            Toast.makeText(SignUp.this, response.getString("errorMessage"), Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                        Log.d("Response", response.toString());
                         Intent intent = new Intent(SignUp.this, LogInActivity.class);
                         startActivity(intent);
                     }

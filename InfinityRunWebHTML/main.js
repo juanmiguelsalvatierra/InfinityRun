@@ -364,9 +364,14 @@ async function signup() {
     }*/
 
     if (xhr.readyState === XMLHttpRequest.DONE) {
-      alert(xhr.responseText);
-      window.location.href = "login.html";
+      var response = JSON.parse(xhr.response);
 
+      if (response.statusCode == 200) {
+        alert(response.message);
+        window.location.href = "login.html";
+      } else {
+        alert(response.errorMessage);
+      }
     }
   };
   xhr.send(JSON.stringify({ username: username, mail: email, password: password }));
